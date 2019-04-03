@@ -1,7 +1,5 @@
 package microgram.impl.clt.rest;
 
-import static microgram.api.java.Result.error;
-import static microgram.api.java.Result.ok;
 import java.net.URI;
 
 import javax.ws.rs.client.Client;
@@ -42,9 +40,9 @@ abstract class RestClient {
         try {
             StatusType status = r.getStatusInfo();
             if (status.equals(expected))
-                return ok();
+                return Result.ok();
             else
-                return error(errorCode(status.getStatusCode()));
+                return Result.error(errorCode(status.getStatusCode()));
         } finally {
             r.close();
         }
@@ -56,9 +54,9 @@ abstract class RestClient {
         try {
             StatusType status = r.getStatusInfo();
             if (status.equals(expected))
-                return ok(r.readEntity(gtype));
+                return Result.ok(r.readEntity(gtype));
             else
-                return error(errorCode(status.getStatusCode()));
+                return Result.error(errorCode(status.getStatusCode()));
         } finally {
             r.close();
         }
