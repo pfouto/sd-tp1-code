@@ -16,7 +16,7 @@ public class ProfilesWebService extends SoapService implements SoapProfiles {
 
 	final Profiles impl;
 	
-	protected ProfilesWebService() {
+	public ProfilesWebService() {
 		this.impl = new JavaProfiles();
 	}
 	
@@ -27,32 +27,27 @@ public class ProfilesWebService extends SoapService implements SoapProfiles {
 
 	@Override
 	public void createProfile(Profile profile) throws MicrogramException {
-		// TODO Auto-generated method stub
-		
+		super.resultOrThrow( impl.createProfile(profile));
 	}
 
 	@Override
 	public void deleteProfile(String userId) throws MicrogramException {
-		// TODO Auto-generated method stub
-		
+		super.resultOrThrow( impl.deleteProfile(userId));
 	}
 
 	@Override
 	public List<Profile> search(String prefix) throws MicrogramException {
-		// TODO Auto-generated method stub
-		return null;
+		return super.resultOrThrow( impl.search(prefix));
 	}
 
 	@Override
 	public void follow(String userId1, String userId2, boolean isFollowing) throws MicrogramException {
-		// TODO Auto-generated method stub
-		
+		super.resultOrThrow( impl.follow(userId1, userId2, isFollowing));
 	}
 
 	@Override
 	public boolean isFollowing(String userId1, String userId2) throws MicrogramException {
-		// TODO Auto-generated method stub
-		return false;
+		return super.resultOrThrow( impl.isFollowing(userId1, userId2));
 	}
 	
 }
