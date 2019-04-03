@@ -1,9 +1,9 @@
 package microgram.impl.clt.rest;
 
-import microgram.api.java.Result;
-import microgram.api.java.Result.ErrorCode;
-import microgram.impl.clt.java.RetryClient;
-import org.glassfish.jersey.client.ClientConfig;
+import static microgram.api.java.Result.error;
+import static microgram.api.java.Result.ok;
+
+import java.net.URI;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -12,14 +12,15 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
-import java.net.URI;
 
-import static microgram.api.java.Result.error;
-import static microgram.api.java.Result.ok;
+import org.glassfish.jersey.client.ClientConfig;
 
-abstract class RestClient extends RetryClient {
+import microgram.api.java.Result;
+import microgram.api.java.Result.ErrorCode;
 
-    protected final URI uri;
+abstract class RestClient {
+
+	protected final URI uri;
     protected final Client client;
     protected final WebTarget target;
     protected final ClientConfig config;

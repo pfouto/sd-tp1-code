@@ -6,6 +6,8 @@ import microgram.api.java.Media;
 import microgram.api.java.Posts;
 import microgram.api.java.Profiles;
 import microgram.impl.clt.rest.RestMediaClient;
+import microgram.impl.clt.rest.RestPostsClient;
+import microgram.impl.clt.rest.RestProfilesClient;
 import microgram.impl.clt.soap.SoapPostsClient;
 import microgram.impl.clt.soap.SoapProfilesClient;
 
