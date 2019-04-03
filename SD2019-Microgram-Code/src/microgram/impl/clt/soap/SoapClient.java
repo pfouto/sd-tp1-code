@@ -1,13 +1,9 @@
 package microgram.impl.clt.soap;
 
 
-import static microgram.api.java.Result.error;
-import static microgram.api.java.Result.ok;
-
 import java.net.URI;
 import java.net.URL;
 
-import microgram.api.java.Result;
 import microgram.api.java.Result.ErrorCode;
 import microgram.api.soap.MicrogramException;
 
@@ -23,32 +19,6 @@ abstract class SoapClient {
 	@Override
 	public String toString() {
 		return uri.toString();
-	}
-
-	static interface MicrogramResultSupplier<T> {
-		T get() throws MicrogramException;
-	}
-	
-	static interface MicroagramVoidSupplier {
-		void run() throws MicrogramException;
-	}
-	
-	protected <T> Result<T> tryCatchResult( MicrogramResultSupplier<T> sup ) {
-		try {
-			T result = sup.get();
-			return ok( result );
-		} catch( MicrogramException e ) {
-			return error(errorCode(e));
-		}
-	}
-	
-	protected <T> Result<T> tryCatchVoid( MicroagramVoidSupplier r ) {
-		try {
-			r.run();
-			return ok();
-		} catch( MicrogramException e ) {
-			return error(errorCode(e));
-		}
 	}
 	
 	protected URL wsdl() {
