@@ -2,6 +2,7 @@ package microgram.impl.clt.soap;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -89,6 +90,15 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
 		try {
 			return Result.ok(impl().isFollowing(userId1, userId2));
+		} catch (MicrogramException e) {
+			return Result.error(super.errorCode(e));
+		}
+	}
+
+	@Override
+	public Result<Set<String>> getFollowees(String userId) {
+		try {
+			return Result.ok(impl().getFollowees(userId));
 		} catch (MicrogramException e) {
 			return Result.error(super.errorCode(e));
 		}

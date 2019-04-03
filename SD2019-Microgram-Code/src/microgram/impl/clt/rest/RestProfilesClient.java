@@ -10,8 +10,12 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import com.sun.xml.internal.ws.client.ResponseContext;
+
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 public class RestProfilesClient extends RestClient implements Profiles {
 
@@ -67,4 +71,11 @@ public class RestProfilesClient extends RestClient implements Profiles {
         return responseContents(r, Status.OK, new GenericType<Boolean>() {
         });
     }
+
+	@Override
+	public Result<Set<String>> getFollowees(String userId) {
+		Response r = target.path(userId).path("followees").request()
+				.accept(MediaType.APPLICATION_JSON).get();
+		return responseContents(r, Status.OK, new GenericType<Set<String>>() {} );
+	}
 }

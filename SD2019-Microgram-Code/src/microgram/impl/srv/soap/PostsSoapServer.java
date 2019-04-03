@@ -1,7 +1,6 @@
 package microgram.impl.srv.soap;
 
 import com.sun.net.httpserver.HttpServer;
-import microgram.api.soap.SoapMedia;
 import utils.IP;
 
 import javax.xml.ws.Endpoint;

@@ -2,6 +2,7 @@ package microgram.impl.srv.soap;
 
 
 import java.util.List;
+import java.util.Set;
 
 import javax.jws.WebService;
 
@@ -48,6 +49,11 @@ public class ProfilesWebService extends SoapService implements SoapProfiles {
 	@Override
 	public boolean isFollowing(String userId1, String userId2) throws MicrogramException {
 		return super.resultOrThrow( impl.isFollowing(userId1, userId2));
+	}
+
+	@Override
+	public Set<String> getFollowees(String userId) throws MicrogramException {
+		return super.resultOrThrow( impl.getFollowees(userId));
 	}
 	
 }

@@ -11,6 +11,7 @@ import java.util.Set;
 import microgram.api.Post;
 import microgram.api.java.Posts;
 import microgram.api.java.Result;
+import microgram.api.java.Result.ErrorCode;
 import utils.Hash;
 
 public class JavaPosts implements Posts {
@@ -18,6 +19,18 @@ public class JavaPosts implements Posts {
 	protected Map<String, Post> posts = new HashMap<>();
 	protected Map<String, Set<String>> likes = new HashMap<>();
 	protected Map<String, Set<String>> userPosts = new HashMap<>();
+	
+	private int nProfiles;
+	private int nPosts;
+	
+	public JavaPosts() {
+		this(1,1);
+	}
+	
+	public JavaPosts(int nprofiles, int nposts) {
+		this.nProfiles = nprofiles;
+		this.nPosts = nposts;
+	}
 
 	@Override
 	public Result<Post> getPost(String postId) {

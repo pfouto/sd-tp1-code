@@ -1,6 +1,7 @@
 package microgram.impl.clt.java;
 
 import java.util.List;
+import java.util.Set;
 
 import microgram.api.Profile;
 import microgram.api.java.Profiles;
@@ -75,6 +76,17 @@ public class RetryProfilesClient implements Profiles {
 		while(true)
 			try {
 				return impl.isFollowing(userId1, userId2);
+			} catch (Exception x) {
+				x.printStackTrace();
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
+			}
+	}
+
+	@Override
+	public Result<Set<String>> getFollowees(String userId) {
+		while(true)
+			try {
+				return impl.getFollowees(userId);
 			} catch (Exception x) {
 				x.printStackTrace();
 				Sleep.ms(ClientConstants.RETRY_SLEEP);
