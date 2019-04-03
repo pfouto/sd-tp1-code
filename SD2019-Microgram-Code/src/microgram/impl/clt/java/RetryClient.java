@@ -6,6 +6,8 @@ import utils.Sleep;
 
 public abstract class RetryClient {
 
+    public static final int READ_TIMEOUT = 15000;
+    public static final int CONNECT_TIMEOUT = 10000;
 	protected static final int RETRY_SLEEP = 500;
 
 	// higher order function to retry forever a call of a void return type,

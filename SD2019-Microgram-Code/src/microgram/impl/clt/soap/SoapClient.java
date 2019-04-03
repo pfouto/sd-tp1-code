@@ -5,6 +5,7 @@ import static microgram.api.java.Result.error;
 import static microgram.api.java.Result.ok;
 
 import java.net.URI;
+import java.net.URL;
 
 import microgram.api.java.Result;
 import microgram.api.java.Result.ErrorCode;
@@ -12,6 +13,7 @@ import microgram.api.soap.MicrogramException;
 
 abstract class SoapClient {
 
+	private static final String WSDL = "?wsdl";
 	protected final URI uri;
 	
 	public SoapClient(URI uri) {
@@ -49,8 +51,16 @@ abstract class SoapClient {
 		}
 	}
 	
+	protected URL wsdl() {
+		try {
+			return new URL(uri.toString() + WSDL);
+		} catch (Exception x) {
+			throw new RuntimeException(x.getMessage());
+		}
+	}
+	
 	//Translates the MicrogramException into an ErrorCode
-	static private ErrorCode errorCode(MicrogramException me) {
+	static protected ErrorCode errorCode(MicrogramException me) {
 		switch (me.getMessage()) {
 			case "OK": return ErrorCode.OK;
 			case "CONFLICT" : return ErrorCode.CONFLICT;

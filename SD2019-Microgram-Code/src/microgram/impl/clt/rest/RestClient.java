@@ -19,9 +19,6 @@ import static microgram.api.java.Result.ok;
 
 abstract class RestClient extends RetryClient {
 
-    private static final int READ_TIMEOUT = 15000;
-    private static final int CONNECT_TIMEOUT = 10000;
-
     protected final URI uri;
     protected final Client client;
     protected final WebTarget target;
