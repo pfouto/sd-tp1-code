@@ -2,6 +2,8 @@ package microgram.impl.clt.rest;
 
 import static microgram.api.java.Result.error;
 import static microgram.api.java.Result.ok;
+import static microgram.impl.clt.java.RetryClient.CONNECT_TIMEOUT;
+import static microgram.impl.clt.java.RetryClient.READ_TIMEOUT;
 
 import java.net.URI;
 
@@ -17,6 +19,7 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import microgram.api.java.Result;
 import microgram.api.java.Result.ErrorCode;
+import org.glassfish.jersey.client.ClientProperties;
 
 abstract class RestClient {
 
@@ -28,6 +31,8 @@ abstract class RestClient {
     public RestClient(URI uri, String path) {
         this.uri = uri;
         this.config = new ClientConfig();
+        config.property(ClientProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);
+        config.property(ClientProperties.READ_TIMEOUT, READ_TIMEOUT);
         this.client = ClientBuilder.newClient(config);
         this.target = this.client.target(uri).path(path);
     }
