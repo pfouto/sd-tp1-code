@@ -20,7 +20,7 @@ public class RetryMediaClient implements Media {
 				return impl.upload(bytes);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -31,7 +31,7 @@ public class RetryMediaClient implements Media {
 				return impl.download(id);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -42,7 +42,7 @@ public class RetryMediaClient implements Media {
 				return impl.delete(id);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 }

@@ -22,7 +22,7 @@ public class RetryProfilesClient implements Profiles {
 				return impl.getProfile(userId);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -33,7 +33,7 @@ public class RetryProfilesClient implements Profiles {
 				return impl.createProfile(profile);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -44,7 +44,7 @@ public class RetryProfilesClient implements Profiles {
 				return impl.deleteProfile(userId);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -55,7 +55,7 @@ public class RetryProfilesClient implements Profiles {
 				return impl.search(prefix);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -66,7 +66,7 @@ public class RetryProfilesClient implements Profiles {
 				return impl.follow(userId1, userId2, isFollowing);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -77,7 +77,7 @@ public class RetryProfilesClient implements Profiles {
 				return impl.isFollowing(userId1, userId2);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 }

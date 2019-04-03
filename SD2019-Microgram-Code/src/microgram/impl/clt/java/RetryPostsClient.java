@@ -22,7 +22,7 @@ public class RetryPostsClient implements Posts {
 				return impl.getPost(postId);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -33,7 +33,7 @@ public class RetryPostsClient implements Posts {
 				return impl.createPost(post);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -44,7 +44,7 @@ public class RetryPostsClient implements Posts {
 				return impl.deletePost(postId);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -55,7 +55,7 @@ public class RetryPostsClient implements Posts {
 				return impl.like(postId, userId, isLiked);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -66,7 +66,7 @@ public class RetryPostsClient implements Posts {
 				return impl.isLiked(postId, userId);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -77,7 +77,7 @@ public class RetryPostsClient implements Posts {
 				return getPosts(userId);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
@@ -88,7 +88,7 @@ public class RetryPostsClient implements Posts {
 				return impl.getFeed(userId);
 			} catch (Exception x) {
 				x.printStackTrace();
-				Sleep.ms(Client.RETRY_SLEEP);
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
 
