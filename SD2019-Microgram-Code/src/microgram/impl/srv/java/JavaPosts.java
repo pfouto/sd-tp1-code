@@ -1,11 +1,5 @@
 package microgram.impl.srv.java;
 
-import static microgram.api.java.Result.error;
-import static microgram.api.java.Result.ok;
-import static microgram.api.java.Result.ErrorCode.CONFLICT;
-import static microgram.api.java.Result.ErrorCode.NOT_FOUND;
-import static microgram.api.java.Result.ErrorCode.NOT_IMPLEMENTED;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +11,6 @@ import java.util.Set;
 import microgram.api.Post;
 import microgram.api.java.Posts;
 import microgram.api.java.Result;
-import microgram.api.java.Result.ErrorCode;
 import utils.Hash;
 
 public class JavaPosts implements Posts {
@@ -30,14 +23,14 @@ public class JavaPosts implements Posts {
 	public Result<Post> getPost(String postId) {
 		Post res = posts.get(postId);
 		if (res != null)
-			return ok(res);
+			return Result.ok(res);
 		else
-			return error(NOT_FOUND);
+			return Result.error(Result.ErrorCode.NOT_FOUND);
 	}
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		return Result.error(ErrorCode.NOT_IMPLEMENTED);
+		return Result.error(Result.ErrorCode.NOT_IMPLEMENTED);
 	}
 
 	@Override
@@ -52,10 +45,10 @@ public class JavaPosts implements Posts {
 				userPosts.put(post.getOwnerId(), posts = new LinkedHashSet<>());
 			posts.add(postId);
 
-			return ok(postId);
+			return Result.ok(postId);
 		}
 		else
-			return error(CONFLICT);
+			return Result.error(Result.ErrorCode.CONFLICT);
 	}
 
 	@Override
@@ -63,18 +56,18 @@ public class JavaPosts implements Posts {
 		
 		Set<String> res = likes.get(postId);
 		if (res == null)
-			return error( NOT_FOUND );
+			return Result.error( Result.ErrorCode.NOT_FOUND );
 
 		if (isLiked) {
 			if (!res.add(userId))
-				return error( CONFLICT );
+				return Result.error( Result.ErrorCode.CONFLICT );
 		} else {
 			if (!res.remove(userId))
-				return error( NOT_FOUND );
+				return Result.error( Result.ErrorCode.NOT_FOUND );
 		}
 
 		getPost(postId).value().setLikes(res.size());
-		return ok();
+		return Result.ok();
 	}
 
 	@Override
@@ -82,23 +75,23 @@ public class JavaPosts implements Posts {
 		Set<String> res = likes.get(postId);
 		
 		if (res != null)
-			return ok(res.contains(userId));
+			return Result.ok(res.contains(userId));
 		else
-			return error( NOT_FOUND );
+			return Result.error( Result.ErrorCode.NOT_FOUND );
 	}
 
 	@Override
 	public Result<List<String>> getPosts(String userId) {
 		Set<String> res = userPosts.get(userId);
 		if (res != null)
-			return ok(new ArrayList<>(res));
+			return Result.ok(new ArrayList<>(res));
 		else
-			return error( NOT_FOUND );
+			return Result.error( Result.ErrorCode.NOT_FOUND );
 	}
 	
 	
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		return error(NOT_IMPLEMENTED);
+		return Result.error(Result.ErrorCode.NOT_IMPLEMENTED);
 	}
 }
