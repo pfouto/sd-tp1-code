@@ -17,7 +17,7 @@ public class RetryPostsClient implements Posts {
 
 	@Override
 	public Result<Post> getPost(String postId) {
-		for (;;)
+		while(true)
 			try {
 				return impl.getPost(postId);
 			} catch (Exception x) {
@@ -28,7 +28,7 @@ public class RetryPostsClient implements Posts {
 
 	@Override
 	public Result<String> createPost(Post post) {
-		for (;;)
+		while(true)
 			try {
 				return impl.createPost(post);
 			} catch (Exception x) {
@@ -39,7 +39,7 @@ public class RetryPostsClient implements Posts {
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		for (;;)
+		while(true)
 			try {
 				return impl.deletePost(postId);
 			} catch (Exception x) {
@@ -50,7 +50,7 @@ public class RetryPostsClient implements Posts {
 
 	@Override
 	public Result<Void> like(String postId, String userId, boolean isLiked) {
-		for (;;)
+		while(true)
 			try {
 				return impl.like(postId, userId, isLiked);
 			} catch (Exception x) {
@@ -61,7 +61,7 @@ public class RetryPostsClient implements Posts {
 
 	@Override
 	public Result<Boolean> isLiked(String postId, String userId) {
-		for (;;)
+		while(true)
 			try {
 				return impl.isLiked(postId, userId);
 			} catch (Exception x) {
@@ -72,7 +72,7 @@ public class RetryPostsClient implements Posts {
 
 	@Override
 	public Result<List<String>> getPosts(String userId) {
-		for (;;)
+		while(true)
 			try {
 				return getPosts(userId);
 			} catch (Exception x) {
@@ -83,7 +83,7 @@ public class RetryPostsClient implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		for (;;)
+		while(true)
 			try {
 				return impl.getFeed(userId);
 			} catch (Exception x) {

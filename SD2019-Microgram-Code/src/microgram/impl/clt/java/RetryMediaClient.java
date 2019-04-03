@@ -15,7 +15,7 @@ public class RetryMediaClient implements Media {
 
 	@Override
 	public Result<String> upload(byte[] bytes) {
-		for (;;)
+		while(true)
 			try {
 				return impl.upload(bytes);
 			} catch (Exception x) {
@@ -26,7 +26,7 @@ public class RetryMediaClient implements Media {
 
 	@Override
 	public Result<byte[]> download(String id) {
-		for (;;)
+		while(true)
 			try {
 				return impl.download(id);
 			} catch (Exception x) {
@@ -37,7 +37,7 @@ public class RetryMediaClient implements Media {
 
 	@Override
 	public Result<Void> delete(String id) {
-		for (;;)
+		while(true)
 			try {
 				return impl.delete(id);
 			} catch (Exception x) {
