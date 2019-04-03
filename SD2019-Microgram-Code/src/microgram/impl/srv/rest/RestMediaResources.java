@@ -21,5 +21,8 @@ public class RestMediaResources extends RestResource implements RestMediaStorage
 	public byte[] download(String id) {
 		return super.resultOrThrow( impl.download(id));
  	}
-	
+
+	@Override
+	public void delete(String id) { super.resultOrThrow(impl.delete(id)); }
+
 }
