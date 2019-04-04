@@ -70,4 +70,10 @@ public class RestPostsClient extends RestClient implements Posts {
 		return responseContents(r, Status.OK, new GenericType<List<String>>() {
 		});
 	}
+
+	@Override
+	public Result<Void> unlikeAllPosts(String userId) {
+		Response r = target.path("likes").path(userId).request().delete();
+		return verifyResponse(r, Status.NO_CONTENT);
+	}
 }

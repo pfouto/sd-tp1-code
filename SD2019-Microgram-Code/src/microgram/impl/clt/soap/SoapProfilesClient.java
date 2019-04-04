@@ -104,4 +104,24 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 		}
 	}
 
+	@Override
+	public Result<Void> updateProfile(Profile profile) {
+		try {
+			impl().updateProfile(profile);
+			return Result.ok();
+		} catch (MicrogramException e) {
+			return Result.error(super.errorCode(e));
+		}
+	}
+
+	@Override
+	public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
+		try {
+			impl().updateNumberOfPosts(userId, increase);
+			return Result.ok();
+		} catch (MicrogramException e) {
+			return Result.error(super.errorCode(e));
+		}
+	}
+
 }

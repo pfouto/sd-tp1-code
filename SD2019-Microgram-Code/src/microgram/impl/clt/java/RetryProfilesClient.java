@@ -92,4 +92,26 @@ public class RetryProfilesClient implements Profiles {
 				Sleep.ms(ClientConstants.RETRY_SLEEP);
 			}
 	}
+
+	@Override
+	public Result<Void> updateProfile(Profile profile) {
+		while(true)
+			try {
+				return impl.updateProfile(profile);
+			} catch (Exception x) {
+				x.printStackTrace();
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
+			}
+	}
+
+	@Override
+	public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
+		while(true)
+			try {
+				return impl.updateNumberOfPosts(userId, increase);
+			} catch (Exception x) {
+				x.printStackTrace();
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
+			}
+	}
 }

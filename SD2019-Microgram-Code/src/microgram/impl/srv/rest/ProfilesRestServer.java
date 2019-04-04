@@ -8,6 +8,8 @@ import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import discovery.Discovery;
+import microgram.impl.srv.soap.PostsSoapServer;
+import microgram.impl.srv.soap.ProfilesSoapServer;
 import utils.IP;
 
 
@@ -48,12 +50,25 @@ public class ProfilesRestServer {
 		if(profiles <= 0 || posts <= 0) 
 			throw new RuntimeException("Invalid number of servers in input.");
 
-		config.register(new RestProfilesResources(URI.create(serverURI), profiles, posts));
+		Discovery.announce(SERVICE, serverURI);
+		
+		URI[] profileServers = new URI[0];
+		URI[] postServers = new URI[0];	
+		URI[] mediaServers = new URI[0];
+		
+		while(profileServers.length != profiles)
+				profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
+		while(postServers.length != posts)
+				postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
+		while(mediaServers.length != 1)
+			mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
+		
+		config.register(new RestProfilesResources(URI.create(serverURI), profileServers, postServers, mediaServers));
 		
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI.replace(ip, "0.0.0.0")), config);
 
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
 		
-		Discovery.announce(SERVICE, serverURI);
+		
 	}
 }

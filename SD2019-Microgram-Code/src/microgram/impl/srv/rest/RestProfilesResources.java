@@ -13,12 +13,8 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 
 	final Profiles impl;
 	
-	public RestProfilesResources(URI serverUri) {
-		this.impl = new JavaProfiles();
-	}
-	
-	public RestProfilesResources(URI serverUri, int nprofiles, int nposts) {
-		this.impl = new JavaProfiles(nprofiles, nposts);
+	public RestProfilesResources(URI serverUri, URI[] profiles, URI[] posts, URI[] media) {
+		this.impl = new JavaProfiles(profiles, posts, media);
 	}
 	
 	@Override
@@ -54,5 +50,15 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 	@Override
 	public Set<String> getFollowees(String userId) {
 		return super.resultOrThrow(impl.getFollowees(userId));
+	}
+
+	@Override
+	public void updateProfile(Profile profile) {
+		super.resultOrThrow(impl.updateProfile(profile));
+	}
+
+	@Override
+	public void updateNumberOfPosts(String userId, boolean increase) {
+		super.resultOrThrow(impl.updateNumberOfPosts(userId, increase));
 	}	
 }

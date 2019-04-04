@@ -76,4 +76,19 @@ public class RestProfilesClient extends RestClient implements Profiles {
 				.accept(MediaType.APPLICATION_JSON).get();
 		return responseContents(r, Status.OK, new GenericType<Set<String>>() {} );
 	}
+
+	@Override
+	public Result<Void> updateProfile(Profile profile) {
+		Response r = target.request().put(Entity.entity(profile, MediaType.APPLICATION_JSON));
+		
+		return verifyResponse(r, Status.NO_CONTENT);
+	}
+
+	@Override
+	public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
+		Response r = target.path(userId).path("posts")
+				.request().put(Entity.entity(increase, MediaType.APPLICATION_JSON));
+		
+		return verifyResponse(r, Status.NO_CONTENT);
+	}
 }

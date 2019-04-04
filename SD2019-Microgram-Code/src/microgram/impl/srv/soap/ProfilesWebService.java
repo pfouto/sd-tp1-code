@@ -1,6 +1,7 @@
 package microgram.impl.srv.soap;
 
 
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
@@ -17,8 +18,8 @@ public class ProfilesWebService extends SoapService implements SoapProfiles {
 
 	final Profiles impl;
 	
-	public ProfilesWebService() {
-		this.impl = new JavaProfiles();
+	public ProfilesWebService(URI[] profiles, URI[] posts, URI[] media) {
+		this.impl = new JavaProfiles(profiles, posts, media);
 	}
 	
 	@Override
@@ -54,6 +55,16 @@ public class ProfilesWebService extends SoapService implements SoapProfiles {
 	@Override
 	public Set<String> getFollowees(String userId) throws MicrogramException {
 		return super.resultOrThrow( impl.getFollowees(userId));
+	}
+
+	@Override
+	public void updateProfile(Profile profile) throws MicrogramException {
+		super.resultOrThrow( impl.updateProfile(profile) );
+	}
+
+	@Override
+	public void updateNumberOfPosts(String userId, boolean increase) throws MicrogramException {
+		super.resultOrThrow( impl.updateNumberOfPosts(userId, increase) );
 	}
 	
 }

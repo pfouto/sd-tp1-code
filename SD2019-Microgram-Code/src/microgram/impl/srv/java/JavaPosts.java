@@ -9,16 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import discovery.Discovery;
 import microgram.api.Post;
-import microgram.api.Profile;
 import microgram.api.java.Media;
 import microgram.api.java.Posts;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.impl.clt.java.ClientFactory;
-import microgram.impl.srv.rest.MediaRestServer;
-import microgram.impl.srv.rest.ProfilesRestServer;
 import utils.Hash;
 
 public class JavaPosts implements Posts {
@@ -31,16 +27,16 @@ public class JavaPosts implements Posts {
 	private Map<URI,Profiles> profileServers = new HashMap<URI, Profiles>();
 	private Map<URI,Media> mediaServers = new HashMap<URI, Media>();
 
-	public JavaPosts(URI[] posts, URI[] profiles, URI[] media) {
-		
+	public JavaPosts(URI[] profiles, URI[] posts, URI[] media) {
+
 		for(URI u: posts) {
 			postsServers.put(u, ClientFactory.getPostsClient(u));
 		}
-		
+
 		for(URI u: profiles) {
 			profileServers.put(u, ClientFactory.getProfiles(u));
 		}
-		
+
 		for(URI u: media) {
 			mediaServers.put(u, ClientFactory.getMediaClient(u));
 		}
@@ -63,19 +59,14 @@ public class JavaPosts implements Posts {
 		}
 
 		this.userPosts.get(p.getOwnerId()).remove(postId);
+		this.likes.remove(postId);
 
 		this.mediaServers.values().iterator().next().delete(p.getMediaUrl().substring(p.getMediaUrl().lastIndexOf('/')+1));
-		
+
 		Profiles pserver = this.profileServers.values().iterator().next();
-		
-		//TODO: Might be smarter to have a single operation to lower the value of the posts.
-		Profile profile = pserver.getProfile(p.getOwnerId()).value();
-		
-		profile.setPosts(profile.getPosts() - 1);
-		
-		//TODO:
-		//pserver.updateProfile(profile);
-		
+
+		pserver.updateNumberOfPosts(p.getOwnerId(), false);
+
 		return Result.ok();
 
 	}
@@ -139,6 +130,35 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		return Result.error(Result.ErrorCode.NOT_IMPLEMENTED);
+		Profiles pserver = this.profileServers.values().iterator().next();
+		Result<Set<String>> followees = pserver.getFollowees(userId);
+
+		if(followees.isOK()) {
+			List<String> feed = new ArrayList<String>();
+			for(String user: followees.value()) {
+				Set<String> posts = this.userPosts.get(user);
+				if(posts != null)
+					feed.addAll(posts);
+			}
+			return Result.ok(feed);
+		} else {
+			return Result.error(followees.error());
+		}
+	}
+
+	@Override
+	public Result<Void> unlikeAllPosts(String userId) {
+		boolean found = false;
+		for(String post: this.likes.keySet()) {
+			if(this.likes.get(post).remove(userId)) {
+				found = true;
+				this.posts.get(post).setLikes(this.likes.get(post).size());			
+			}
+		}
+
+		if(found)
+			return Result.ok();
+
+		return Result.error(Result.ErrorCode.NOT_FOUND);
 	}
 }

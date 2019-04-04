@@ -102,4 +102,14 @@ public class SoapPostsClient extends SoapClient implements Posts {
 			return Result.error(super.errorCode(e));
 		}
 	}
+
+	@Override
+	public Result<Void> unlikeAllPosts(String userId) {
+		try {
+			impl().unlikeAllPosts(userId);
+			return Result.ok();
+		} catch (MicrogramException e) {
+			return Result.error(super.errorCode(e));
+		}
+	}
 }

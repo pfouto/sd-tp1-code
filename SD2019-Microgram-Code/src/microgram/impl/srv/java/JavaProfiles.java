@@ -1,5 +1,6 @@
 package microgram.impl.srv.java;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -8,8 +9,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import microgram.api.Profile;
+import microgram.api.java.Media;
+import microgram.api.java.Posts;
+import microgram.api.java.Profiles;
 import microgram.api.java.Result;
-
+import microgram.impl.clt.java.ClientFactory;
 import microgram.impl.srv.rest.RestResource;
 
 public class JavaProfiles extends RestResource implements microgram.api.java.Profiles {
@@ -18,17 +22,22 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	Map<String, Set<String>> followers = new HashMap<>();
 	Map<String, Set<String>> following = new HashMap<>();
 
-	private int nProfiles;
-	private int nPosts;
-
-	public JavaProfiles() {
-		this(1,1);
-	}
-
-	public JavaProfiles(int nprofiles, int nposts) {
-		this.nProfiles = nprofiles;
-		this.nPosts = nposts;
-	}
+	private Map<URI,Posts> postsServers = new HashMap<URI, Posts>();
+	private Map<URI,Profiles> profileServers = new HashMap<URI, Profiles>();
+	private Map<URI,Media> mediaServers = new HashMap<URI, Media>();
+	
+	public JavaProfiles(URI[] profiles, URI[] posts, URI[] media) {
+		for(URI u: posts) {
+			postsServers.put(u, ClientFactory.getPostsClient(u));
+		}
+		
+		for(URI u: profiles) {
+			profileServers.put(u, ClientFactory.getProfiles(u));
+		}
+		
+		for(URI u: media) {
+			mediaServers.put(u, ClientFactory.getMediaClient(u));
+		}	}
 
 	@Override
 	public Result<Profile> getProfile(String userId) {
@@ -54,7 +63,33 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 	@Override
 	public Result<Void> deleteProfile(String userId) {
-		return Result.error(Result.ErrorCode.NOT_IMPLEMENTED);
+		Profile p = this.users.remove(userId);
+		if(p != null) {
+			Set<String> followees = this.following.remove(userId);
+			Set<String> followers = this.followers.remove(userId);
+			
+			for(String follow: followees) {
+				this.follow(userId, follow, false);
+			}
+			
+			for(String follow: followers) {
+				this.follow(follow, userId, false);
+			}
+			
+			Posts postServer = postsServers.values().iterator().next();
+			Result<List<String>> posts = postServer.getPosts(userId);
+			
+			if(posts.isOK()) {
+				for(String post: posts.value()) {
+					postServer.deletePost(post);
+				}
+			}
+			
+			postServer.unlikeAllPosts(userId);
+			return Result.ok();
+		} else {
+			return Result.error(Result.ErrorCode.NOT_FOUND);
+		}
 	}
 
 	@Override
@@ -100,6 +135,30 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 			return Result.ok(following.get(userId));
 		else
 			return Result.error(Result.ErrorCode.NOT_FOUND);
+	}
+
+	@Override
+	public Result<Void> updateProfile(Profile profile) {
+		if(users.containsKey(profile.getUserId())) {
+			users.put(profile.getUserId(), profile);
+			return Result.ok();
+		} else {
+			return Result.error(Result.ErrorCode.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
+		Profile p = users.get(userId);
+		if(p != null) {
+			if(increase || p.getPosts() > 0) {
+				p.setPosts(p.getPosts() + (increase ? 1 : -1));
+				return Result.ok();
+			}
+			return Result.error(Result.ErrorCode.CONFLICT);
+		} else {
+			return Result.error(Result.ErrorCode.NOT_FOUND);
+		}
 	}
 
 }

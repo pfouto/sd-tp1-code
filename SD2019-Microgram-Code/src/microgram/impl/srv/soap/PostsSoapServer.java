@@ -1,16 +1,16 @@
 package microgram.impl.srv.soap;
 
-import com.sun.net.httpserver.HttpServer;
-
-import discovery.Discovery;
-import microgram.api.java.Posts;
-import microgram.impl.srv.rest.MediaRestServer;
-import utils.IP;
-
-import javax.xml.ws.Endpoint;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.logging.Logger;
+
+import javax.xml.ws.Endpoint;
+
+import com.sun.net.httpserver.HttpServer;
+
+import discovery.Discovery;
+import microgram.impl.srv.rest.MediaRestServer;
+import utils.IP;
 
 
 public class PostsSoapServer {

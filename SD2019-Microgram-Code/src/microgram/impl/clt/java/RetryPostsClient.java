@@ -92,4 +92,15 @@ public class RetryPostsClient implements Posts {
 			}
 	}
 
+	@Override
+	public Result<Void> unlikeAllPosts(String userId) {
+		while(true)
+			try {
+				impl.unlikeAllPosts(userId);
+			} catch (Exception x) {
+				x.printStackTrace();
+				Sleep.ms(ClientConstants.RETRY_SLEEP);
+			}
+	}
+
 }
