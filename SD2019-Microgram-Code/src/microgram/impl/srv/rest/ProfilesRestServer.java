@@ -21,7 +21,7 @@ public class ProfilesRestServer {
 		System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s");
 	}
 	
-	public static final int PORT = 77;
+	public static final int PORT = 7788;
 	public static final String SERVICE = "Microgram-Profiles";
 	public static String SERVER_BASE_URI = "http://%s:%s/rest";
 	
