@@ -85,7 +85,9 @@ public class Discovery {
 			long expirationtime = System.currentTimeMillis() + DISCOVERY_TIMEOUT;
 			while(true) {
 				DatagramPacket packet = new DatagramPacket(new byte[MAX_DATAGRAM_SIZE], MAX_DATAGRAM_SIZE);
-				ms.setSoTimeout((int)(expirationtime - System.currentTimeMillis()));
+				int timeout = (int)(expirationtime - System.currentTimeMillis());
+				if(timeout <= 0) break;
+				ms.setSoTimeout(timeout);
 				ms.receive(packet);
 				String announcement = new String(packet.getData(), 0, packet.getLength());
 				System.out.println("Received: " + announcement);
