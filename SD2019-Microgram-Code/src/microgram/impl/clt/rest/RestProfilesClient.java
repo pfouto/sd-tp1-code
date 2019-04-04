@@ -11,8 +11,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.sun.xml.internal.ws.client.ResponseContext;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Set;

@@ -12,12 +12,8 @@ public class RestPostsResources extends RestResource implements RestPosts {
 
 	final Posts impl;
 		
-	public RestPostsResources(URI serverUri) {
-		this.impl = new JavaPosts();
-	}
-	
-	public RestPostsResources(URI serverUri, int nprofiles, int nposts) {
-		this.impl = new JavaPosts(nprofiles, nposts);
+	public RestPostsResources(URI serverUri, URI[] profiles, URI[] posts, URI[] media) {
+		this.impl = new JavaPosts(profiles, posts, media);
 	}
 	
 	@Override

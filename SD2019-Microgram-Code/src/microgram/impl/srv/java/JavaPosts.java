@@ -1,5 +1,6 @@
 package microgram.impl.srv.java;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,10 +9,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import discovery.Discovery;
 import microgram.api.Post;
+import microgram.api.Profile;
+import microgram.api.java.Media;
 import microgram.api.java.Posts;
+import microgram.api.java.Profiles;
 import microgram.api.java.Result;
-import microgram.api.java.Result.ErrorCode;
+import microgram.impl.clt.java.ClientFactory;
+import microgram.impl.srv.rest.MediaRestServer;
+import microgram.impl.srv.rest.ProfilesRestServer;
 import utils.Hash;
 
 public class JavaPosts implements Posts {
@@ -19,17 +26,24 @@ public class JavaPosts implements Posts {
 	protected Map<String, Post> posts = new HashMap<>();
 	protected Map<String, Set<String>> likes = new HashMap<>();
 	protected Map<String, Set<String>> userPosts = new HashMap<>();
-	
-	private int nProfiles;
-	private int nPosts;
-	
-	public JavaPosts() {
-		this(1,1);
-	}
-	
-	public JavaPosts(int nprofiles, int nposts) {
-		this.nProfiles = nprofiles;
-		this.nPosts = nposts;
+
+	private Map<URI,Posts> postsServers = new HashMap<URI, Posts>();
+	private Map<URI,Profiles> profileServers = new HashMap<URI, Profiles>();
+	private Map<URI,Media> mediaServers = new HashMap<URI, Media>();
+
+	public JavaPosts(URI[] posts, URI[] profiles, URI[] media) {
+		
+		for(URI u: posts) {
+			postsServers.put(u, ClientFactory.getPostsClient(u));
+		}
+		
+		for(URI u: profiles) {
+			profileServers.put(u, ClientFactory.getProfiles(u));
+		}
+		
+		for(URI u: media) {
+			mediaServers.put(u, ClientFactory.getMediaClient(u));
+		}
 	}
 
 	@Override
@@ -43,7 +57,27 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		return Result.error(Result.ErrorCode.NOT_IMPLEMENTED);
+		Post p = this.posts.remove(postId);
+		if(p == null) {
+			return Result.error(Result.ErrorCode.NOT_FOUND);
+		}
+
+		this.userPosts.get(p.getOwnerId()).remove(postId);
+
+		this.mediaServers.values().iterator().next().delete(p.getMediaUrl().substring(p.getMediaUrl().lastIndexOf('/')+1));
+		
+		Profiles pserver = this.profileServers.values().iterator().next();
+		
+		//TODO: Might be smarter to have a single operation to lower the value of the posts.
+		Profile profile = pserver.getProfile(p.getOwnerId()).value();
+		
+		profile.setPosts(profile.getPosts() - 1);
+		
+		//TODO:
+		//pserver.updateProfile(profile);
+		
+		return Result.ok();
+
 	}
 
 	@Override
@@ -66,7 +100,7 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<Void> like(String postId, String userId, boolean isLiked) {
-		
+
 		Set<String> res = likes.get(postId);
 		if (res == null)
 			return Result.error( Result.ErrorCode.NOT_FOUND );
@@ -86,7 +120,7 @@ public class JavaPosts implements Posts {
 	@Override
 	public Result<Boolean> isLiked(String postId, String userId) {
 		Set<String> res = likes.get(postId);
-		
+
 		if (res != null)
 			return Result.ok(res.contains(userId));
 		else
@@ -101,8 +135,8 @@ public class JavaPosts implements Posts {
 		else
 			return Result.error( Result.ErrorCode.NOT_FOUND );
 	}
-	
-	
+
+
 	@Override
 	public Result<List<String>> getFeed(String userId) {
 		return Result.error(Result.ErrorCode.NOT_IMPLEMENTED);

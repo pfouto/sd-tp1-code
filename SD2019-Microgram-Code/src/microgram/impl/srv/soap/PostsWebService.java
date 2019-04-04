@@ -1,23 +1,24 @@
 package microgram.impl.srv.soap;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.jws.WebService;
 
 import microgram.api.Post;
 import microgram.api.java.Posts;
-import microgram.api.java.Profiles;
 import microgram.api.soap.MicrogramException;
 import microgram.api.soap.SoapPosts;
 import microgram.impl.srv.java.JavaPosts;
-import microgram.impl.srv.java.JavaProfiles;
 
 @WebService(serviceName=SoapPosts.NAME, targetNamespace=SoapPosts.NAMESPACE, endpointInterface=SoapPosts.INTERFACE)
 public class PostsWebService extends SoapService implements SoapPosts {
 
 	final Posts impl;
-
-	public PostsWebService(){ this.impl = new JavaPosts();}
+	
+	public PostsWebService(URI[] profiles, URI[] posts, URI[] media) { 
+		this.impl = new JavaPosts(profiles, posts, media); 
+	}
 
 	@Override
 	public Post getPost(String postId) throws MicrogramException {
