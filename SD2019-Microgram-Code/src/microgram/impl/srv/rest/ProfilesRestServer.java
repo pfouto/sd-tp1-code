@@ -20,18 +20,18 @@ public class ProfilesRestServer {
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s");
 	}
-	
+
 	public static final int PORT = 7788;
 	public static final String SERVICE = "Microgram-Profiles";
 	public static String SERVER_BASE_URI = "http://%s:%s/rest";
-	
+
 	public static void main(String[] args) throws Exception {
 
 		Log.setLevel( Level.FINER );
 
 		String ip = IP.hostAddress();
 		String serverURI = String.format(SERVER_BASE_URI, ip, PORT);
-		
+
 		ResourceConfig config = new ResourceConfig();
 
 		int profiles = 1;
@@ -51,24 +51,24 @@ public class ProfilesRestServer {
 			throw new RuntimeException("Invalid number of servers in input.");
 
 		Discovery.announce(SERVICE, serverURI);
-		
+
 		URI[] profileServers = new URI[0];
 		URI[] postServers = new URI[0];	
 		URI[] mediaServers = new URI[0];
-		
+
 		//while(profileServers.length != profiles)
-				profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
+		profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
 		//while(postServers.length != posts)
-				postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
+		postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
 		//while(mediaServers.length != 1)
-			mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
-		
+		mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
+
 		config.register(new RestProfilesResources(URI.create(serverURI), profileServers, postServers, mediaServers));
-		
+
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI.replace(ip, "0.0.0.0")), config);
 
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
-		
-		
+
+
 	}
 }
