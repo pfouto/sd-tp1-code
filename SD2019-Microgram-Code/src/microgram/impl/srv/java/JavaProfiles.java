@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import microgram.api.Profile;
@@ -18,9 +19,9 @@ import microgram.impl.srv.rest.RestResource;
 
 public class JavaProfiles extends RestResource implements microgram.api.java.Profiles {
 
-	Map<String, Profile> users = new HashMap<>();
-	Map<String, Set<String>> followers = new HashMap<>();
-	Map<String, Set<String>> following = new HashMap<>();
+	Map<String, Profile> users = new ConcurrentHashMap<>();
+	Map<String, Set<String>> followers = new ConcurrentHashMap<>();
+	Map<String, Set<String>> following = new ConcurrentHashMap<>();
 
 	private Map<URI,Posts> postsServers = new HashMap<URI, Posts>();
 	private Map<URI,Profiles> profileServers = new HashMap<URI, Profiles>();
@@ -47,7 +48,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 		res.setFollowers( followers.get(userId).size() );
 		res.setFollowing( following.get(userId).size() );
-		return Result.ok(res);
+		return Result.ok(res);	
 	}
 
 	@Override
