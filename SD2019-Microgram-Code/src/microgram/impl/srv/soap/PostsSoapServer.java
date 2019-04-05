@@ -51,11 +51,11 @@ public class PostsSoapServer {
 		URI[] postServers = new URI[0];	
 		URI[] mediaServers = new URI[0];
 		
-		while(profileServers.length != profiles)
+		//while(profileServers.length != profiles)
 				profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
-		while(postServers.length != posts)
+		//while(postServers.length != posts)
 				postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
-		while(mediaServers.length != 1)
+		//while(mediaServers.length != 1)
 			mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
 	
 		Endpoint soapEndpoint = Endpoint.create(new PostsWebService(profileServers, postServers, mediaServers));

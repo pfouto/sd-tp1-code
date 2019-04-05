@@ -23,6 +23,7 @@ public class JavaMedia implements Media {
 	public Result<String> upload(byte[] bytes) {
 		try {
 			String id = Hash.of(bytes);
+			System.err.println("Upload over: " + id);
 			File filename = new File(ROOT_DIR + id + MEDIA_EXTENSION);
 			if(!filename.exists()) 
 				Files.write(filename.toPath(), bytes);
@@ -49,6 +50,7 @@ public class JavaMedia implements Media {
 
 	@Override
 	public Result<Void> delete(String id) {
+		System.err.println("Delete over: " + id);
 		try {
 			File filename = new File(ROOT_DIR + id + MEDIA_EXTENSION);
 			if (filename.exists()) {

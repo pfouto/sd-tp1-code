@@ -7,7 +7,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
-import com.sun.xml.internal.ws.client.BindingProviderProperties;
+import com.sun.xml.ws.developer.JAXWSProperties;
 
 import microgram.api.Post;
 import microgram.api.java.Posts;
@@ -30,9 +30,8 @@ public class SoapPostsClient extends SoapClient implements Posts {
 		if( impl == null ) {
 			Service service = Service.create(super.wsdl(), qname);
 			impl = service.getPort(SoapPosts.class);
-			((BindingProvider) impl).getRequestContext().put(BindingProviderProperties.REQUEST_TIMEOUT, ClientConstants.READ_TIMEOUT);
-			((BindingProvider) impl).getRequestContext().put(BindingProviderProperties.CONNECT_TIMEOUT, ClientConstants.CONNECT_TIMEOUT);
-
+			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.REQUEST_TIMEOUT, ClientConstants.READ_TIMEOUT);
+			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, ClientConstants.READ_TIMEOUT);
 		}
 		return impl;
 	}
