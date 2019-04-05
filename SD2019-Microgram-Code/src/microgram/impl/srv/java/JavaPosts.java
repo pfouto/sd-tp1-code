@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import microgram.api.Post;
 import microgram.api.java.Media;
@@ -19,9 +20,9 @@ import utils.Hash;
 
 public class JavaPosts implements Posts {
 
-	protected Map<String, Post> posts = new HashMap<>();
-	protected Map<String, Set<String>> likes = new HashMap<>();
-	protected Map<String, Set<String>> userPosts = new HashMap<>();
+	protected Map<String, Post> posts = new ConcurrentHashMap<String, Post>();
+	protected Map<String, Set<String>> likes = new ConcurrentHashMap<>();
+	protected Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
 
 	private Map<URI,Posts> postsServers = new HashMap<URI, Posts>();
 	private Map<URI,Profiles> profileServers = new HashMap<URI, Profiles>();
