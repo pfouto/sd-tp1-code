@@ -54,6 +54,8 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<Void> deletePost(String postId) {
+		
+		try {
 		Post p = this.posts.remove(postId);
 		if(p == null) {
 			return Result.error(Result.ErrorCode.NOT_FOUND);
@@ -69,6 +71,10 @@ public class JavaPosts implements Posts {
 		pserver.updateNumberOfPosts(p.getOwnerId(), false);
 
 		return Result.ok();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Result.error(Result.ErrorCode.INTERNAL_ERROR);
+		}
 
 	}
 
