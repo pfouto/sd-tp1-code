@@ -53,12 +53,10 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 	@Override
 	public Result<Void> createProfile(Profile profile) {
-		if( users.containsKey(profile.getUserId()) ) {
+		if( users.putIfAbsent( profile.getUserId(), profile ) != null ) {
 			return Result.error(Result.ErrorCode.CONFLICT);
 		}
 		
-		users.put( profile.getUserId(), profile );
-
 		followers.put( profile.getUserId(), new HashSet<>());
 		following.put( profile.getUserId(), new HashSet<>());
 		return Result.ok();
