@@ -54,7 +54,7 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		
+
 		try {
 		Post p = this.posts.remove(postId);
 		if(p == null) {
@@ -159,7 +159,7 @@ public class JavaPosts implements Posts {
 		for(String post: this.likes.keySet()) {
 			if(this.likes.get(post).remove(userId)) {
 				found = true;
-				this.posts.get(post).setLikes(this.likes.get(post).size());			
+				this.posts.get(post).setLikes(this.likes.get(post).size());
 			}
 		}
 

@@ -12,16 +12,7 @@
 		<authors>11111-22222</authors>
 		<dockerfile-maven-version>1.4.10</dockerfile-maven-version>
 	</properties>
-	<repositories>
-		<repository>
-			<id>sd19</id>
-			<url>http://asc.di.fct.unl.pt/sd/mvn-repo/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
+
 	<distributionManagement>
 		<repository>
 			<id>sd19</id>
