@@ -87,9 +87,13 @@ public class JavaPosts implements Posts {
 
 			Set<String> posts = userPosts.get(post.getOwnerId());
 			if (posts == null)
-				userPosts.put(post.getOwnerId(), posts = new LinkedHashSet<>());
+				userPosts.put(post.getOwnerId(), posts = ConcurrentHashMap.newKeySet());
 			posts.add(postId);
 
+			Profiles pserver = this.profileServers.values().iterator().next();
+
+			pserver.updateNumberOfPosts(post.getOwnerId(), true);
+			
 			return Result.ok(postId);
 		}
 		else
