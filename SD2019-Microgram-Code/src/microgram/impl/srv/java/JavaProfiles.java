@@ -132,8 +132,8 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 	@Override
 	public Result<Set<String>> getFollowees(String userId) {
-		if(followers.containsKey(userId))
-			return Result.ok(followers.get(userId));
+		if(following.containsKey(userId))
+			return Result.ok(following.get(userId));
 		else
 			return Result.error(Result.ErrorCode.NOT_FOUND);
 	}
