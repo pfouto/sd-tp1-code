@@ -74,7 +74,7 @@ public class RetryPostsClient implements Posts {
 	public Result<List<String>> getPosts(String userId) {
 		while(true)
 			try {
-				return getPosts(userId);
+				return impl.getPosts(userId);
 			} catch (Exception x) {
 				x.printStackTrace();
 				Sleep.ms(ClientConstants.RETRY_SLEEP);
@@ -96,7 +96,7 @@ public class RetryPostsClient implements Posts {
 	public Result<Void> unlikeAllPosts(String userId) {
 		while(true)
 			try {
-				impl.unlikeAllPosts(userId);
+				return impl.unlikeAllPosts(userId);
 			} catch (Exception x) {
 				x.printStackTrace();
 				Sleep.ms(ClientConstants.RETRY_SLEEP);

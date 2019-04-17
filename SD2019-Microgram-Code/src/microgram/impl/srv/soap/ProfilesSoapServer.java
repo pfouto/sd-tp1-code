@@ -1,9 +1,7 @@
 package microgram.impl.srv.soap;
 
 import com.sun.net.httpserver.HttpServer;
-
 import discovery.Discovery;
-import microgram.impl.srv.rest.MediaRestServer;
 import utils.IP;
 
 import javax.xml.ws.Endpoint;
@@ -43,20 +41,12 @@ public class ProfilesSoapServer {
 			throw new RuntimeException("Invalid number of servers in input.");
 
 		String ip = IP.hostAddress();
-		Discovery.announce(PostsSoapServer.SERVICE, String.format(SERVER_BASE_URI, ip, PORT));
+		Discovery.announce(SERVICE, String.format(SERVER_BASE_URI, ip, PORT));
 
-		URI[] profileServers = new URI[0];
-		URI[] postServers = new URI[0];	
-		URI[] mediaServers = new URI[0];
-
-		//while(profileServers.length != profiles)
-		profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
 		//while(postServers.length != posts)
-		postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
-		//while(mediaServers.length != 1)
-		mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
+		URI[] postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
 
-		Endpoint soapEndpoint = Endpoint.create(new ProfilesWebService(profileServers, postServers, mediaServers));
+		Endpoint soapEndpoint = Endpoint.create(new ProfilesWebService( postServers[0]));
 		soapEndpoint.publish(server.createContext("/soap"));
 		server.start();
 

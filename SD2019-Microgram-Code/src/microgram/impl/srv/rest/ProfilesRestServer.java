@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import microgram.impl.srv.rest.utils.GenericExceptionMapper;
+import microgram.impl.srv.rest.utils.PrematchingRequestFilter;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -52,18 +54,12 @@ public class ProfilesRestServer {
 
 		Discovery.announce(SERVICE, serverURI);
 
-		URI[] profileServers = new URI[0];
-		URI[] postServers = new URI[0];	
-		URI[] mediaServers = new URI[0];
-
-		//while(profileServers.length != profiles)
-		profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
 		//while(postServers.length != posts)
-		postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
-		//while(mediaServers.length != 1)
-		mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
+		URI[] postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
 
-		config.register(new RestProfilesResources(URI.create(serverURI), profileServers, postServers, mediaServers));
+		config.register(new RestProfilesResources(URI.create(serverURI), postServers[0]));
+		config.register(new GenericExceptionMapper());
+		config.register(new PrematchingRequestFilter());
 
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI.replace(ip, "0.0.0.0")), config);
 

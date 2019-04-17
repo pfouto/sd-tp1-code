@@ -16,8 +16,8 @@ public class PostsWebService extends SoapService implements SoapPosts {
 
 	final Posts impl;
 	
-	public PostsWebService(URI[] profiles, URI[] posts, URI[] media) { 
-		this.impl = new JavaPosts(profiles, posts, media); 
+	public PostsWebService(URI profilesUri, URI mediaUri) {
+		this.impl = new JavaPosts(profilesUri, mediaUri);
 	}
 
 	@Override

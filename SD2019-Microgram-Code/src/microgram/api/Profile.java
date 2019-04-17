@@ -1,5 +1,7 @@
 package microgram.api;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Represents a user Profile
  * 
@@ -16,7 +18,7 @@ public class Profile {
 	String fullName;
 	String photoUrl;
 	
-	int posts;
+	AtomicInteger posts;
 	int following;
 	int followers;
 	
@@ -26,7 +28,7 @@ public class Profile {
 		this.userId = userId;
 		this.fullName = fullName;
 		this.photoUrl = photoUrl;
-		this.posts = posts;
+		this.posts = new AtomicInteger(posts);
 		this.following = following;
 		this.followers = followers;
 	}
@@ -56,11 +58,12 @@ public class Profile {
 	}
 
 	public int getPosts() {
-		return posts;
+		return posts.get();
 	}
 
-	public void setPosts(int posts) {
-		this.posts = posts;
+	public void incPosts(boolean inc) {
+		if (inc) posts.incrementAndGet();
+		else posts.decrementAndGet();
 	}
 
 	public int getFollowing() {

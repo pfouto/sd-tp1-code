@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import microgram.impl.srv.rest.utils.GenericExceptionMapper;
+import microgram.impl.srv.rest.utils.PrematchingRequestFilter;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -25,7 +27,7 @@ public class PostsRestServer {
 	public static final String SERVICE = "Microgram-Posts";
 	public static String SERVER_BASE_URI = "http://%s:%s/rest";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 
 		Log.setLevel( Level.FINER );
 
@@ -50,25 +52,21 @@ public class PostsRestServer {
 
 		Discovery.announce(SERVICE, serverURI);
 
-		URI[] profileServers = new URI[0];
-		URI[] postServers = new URI[0];	
-		URI[] mediaServers = new URI[0];
-
 		//while(profileServers.length != profiles)
-		profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
-		//while(postServers.length != posts)
-		postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
+		URI[] profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
 		//while(mediaServers.length != 1)
-		mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
+		URI[] mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
 
 		ResourceConfig config = new ResourceConfig();
 
-		config.register(new RestPostsResources(URI.create(serverURI), profileServers, postServers, mediaServers));
+		config.register(new RestPostsResources(URI.create(serverURI), profileServers[0], mediaServers[0]));
+		config.register(new GenericExceptionMapper());
+		config.register(new PrematchingRequestFilter());
+
 
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI.replace(ip, "0.0.0.0")), config);
 
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
-
 
 	}
 }

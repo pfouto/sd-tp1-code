@@ -13,8 +13,8 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 
 	final Profiles impl;
 	
-	public RestProfilesResources(URI serverUri, URI[] profiles, URI[] posts, URI[] media) {
-		this.impl = new JavaProfiles(profiles, posts, media);
+	public RestProfilesResources(URI serverUri, URI postsUri) {
+		this.impl = new JavaProfiles(postsUri);
 	}
 	
 	@Override

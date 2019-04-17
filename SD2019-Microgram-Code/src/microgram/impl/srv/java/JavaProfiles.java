@@ -23,22 +23,11 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	Map<String, Set<String>> followers = new ConcurrentHashMap<>();
 	Map<String, Set<String>> following = new ConcurrentHashMap<>();
 
-	private Map<URI,Posts> postsServers = new HashMap<URI, Posts>();
-	private Map<URI,Profiles> profileServers = new HashMap<URI, Profiles>();
-	private Map<URI,Media> mediaServers = new HashMap<URI, Media>();
+	private Posts postsClient;
 
-	public JavaProfiles(URI[] profiles, URI[] posts, URI[] media) {
-		for(URI u: posts) {
-			postsServers.put(u, ClientFactory.getPostsClient(u));
-		}
-
-		for(URI u: profiles) {
-			profileServers.put(u, ClientFactory.getProfiles(u));
-		}
-
-		for(URI u: media) {
-			mediaServers.put(u, ClientFactory.getMediaClient(u));
-		}	}
+	public JavaProfiles(URI postsUri) {
+		postsClient = ClientFactory.getPostsClient(postsUri);
+	}
 
 	@Override
 	public Result<Profile> getProfile(String userId) {
@@ -59,6 +48,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 		followers.put( profile.getUserId(), new HashSet<>());
 		following.put( profile.getUserId(), new HashSet<>());
+
 		return Result.ok();
 	}
 
@@ -77,16 +67,15 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 				this.follow(follow, userId, false);
 			}
 
-			Posts postServer = postsServers.values().iterator().next();
-			Result<List<String>> posts = postServer.getPosts(userId);
+			Result<List<String>> posts = postsClient.getPosts(userId);
 
 			if(posts.isOK()) {
 				for(String post: posts.value()) {
-					postServer.deletePost(post);
+					postsClient.deletePost(post);
 				}
 			}
 
-			postServer.unlikeAllPosts(userId);
+			postsClient.unlikeAllPosts(userId);
 			return Result.ok();
 		} else {
 			return Result.error(Result.ErrorCode.NOT_FOUND);
@@ -153,7 +142,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 		Profile p = users.get(userId);
 		if(p != null) {
 			if(increase || p.getPosts() > 0) {
-				p.setPosts(p.getPosts() + (increase ? 1 : -1));
+				p.incPosts(increase);
 				return Result.ok();
 			}
 			return Result.error(Result.ErrorCode.CONFLICT);
