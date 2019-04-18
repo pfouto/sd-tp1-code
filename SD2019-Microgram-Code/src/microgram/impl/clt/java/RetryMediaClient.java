@@ -5,7 +5,7 @@ import microgram.api.java.Result;
 import utils.Sleep;
 
 
-public class RetryMediaClient implements Media {
+public class RetryMediaClient extends RetryClient implements Media {
 
 	final Media impl;
 
@@ -15,34 +15,16 @@ public class RetryMediaClient implements Media {
 
 	@Override
 	public Result<String> upload(byte[] bytes) {
-		while(true)
-			try {
-				return impl.upload(bytes);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.upload(bytes));
 	}
 
 	@Override
 	public Result<byte[]> download(String id) {
-		while(true)
-			try {
-				return impl.download(id);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.download(id));
 	}
 
 	@Override
 	public Result<Void> delete(String id) {
-		while(true)
-			try {
-				return impl.delete(id);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.delete(id));
 	}
 }

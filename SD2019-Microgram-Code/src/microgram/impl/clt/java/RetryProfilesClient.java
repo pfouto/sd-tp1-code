@@ -8,7 +8,7 @@ import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import utils.Sleep;
 
-public class RetryProfilesClient implements Profiles {
+public class RetryProfilesClient extends RetryClient implements Profiles {
 
 	final Profiles impl;
 
@@ -18,100 +18,46 @@ public class RetryProfilesClient implements Profiles {
 	
 	@Override
 	public Result<Profile> getProfile(String userId) {
-		while(true)
-			try {
-				return impl.getProfile(userId);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.getProfile(userId));
 	}
 
 	@Override
 	public Result<Void> createProfile(Profile profile) {
-		while(true)
-			try {
-				return impl.createProfile(profile);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.createProfile(profile));
 	}
 
 	@Override
 	public Result<Void> deleteProfile(String userId) {
-		while(true)
-			try {
-				return impl.deleteProfile(userId);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.deleteProfile(userId));
 	}
 
 	@Override
 	public Result<List<Profile>> search(String prefix) {
-		while(true)
-			try {
-				return impl.search(prefix);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.search(prefix));
 	}
 
 	@Override
 	public Result<Void> follow(String userId1, String userId2, boolean isFollowing) {
-		while(true)
-			try {
-				return impl.follow(userId1, userId2, isFollowing);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.follow(userId1, userId2, isFollowing));
 	}
 
 	@Override
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
-		while(true)
-			try {
-				return impl.isFollowing(userId1, userId2);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.isFollowing(userId1, userId2));
 	}
 
 	@Override
 	public Result<Set<String>> getFollowees(String userId) {
-		while(true)
-			try {
-				return impl.getFollowees(userId);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.getFollowees(userId));
 	}
 
 	@Override
 	public Result<Void> updateProfile(Profile profile) {
-		while(true)
-			try {
-				return impl.updateProfile(profile);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.updateProfile(profile));
 	}
 
 	@Override
 	public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
-		while(true)
-			try {
-				return impl.updateNumberOfPosts(userId, increase);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.updateNumberOfPosts(userId, increase));
 	}
 }

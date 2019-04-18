@@ -14,9 +14,9 @@ LOGS=$(pwd)/logs/
 mkdir -p $LOGS
 
 #update the images, in particular the tester 
-docker pull smduarte/sd19-tp1-tester-beta
+docker pull smduarte/sd19-tp1-tester
 #docker pull $2
 
 #execute the client with the given command line parameters
-docker run --network=sd-net -it -v $LOGS:/logs/ -v /var/run/docker.sock:/var/run/docker.sock smduarte/sd19-tp1-tester-beta:latest $*
+docker run --network=sd-net -it -v $LOGS:/logs/ -v /var/run/docker.sock:/var/run/docker.sock smduarte/sd19-tp1-tester:latest $*
 

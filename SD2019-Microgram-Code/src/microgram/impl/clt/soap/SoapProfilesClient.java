@@ -15,7 +15,7 @@ import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.api.soap.MicrogramException;
 import microgram.api.soap.SoapProfiles;
-import microgram.impl.clt.java.ClientConstants;
+import microgram.impl.clt.java.RetryClient;
 
 public class SoapProfilesClient extends SoapClient implements Profiles {
 
@@ -29,10 +29,14 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 
 	private SoapProfiles impl() {
 		if( impl == null ) {
+			System.err.println("Building profiles client");
 			Service service = Service.create(super.wsdl(), qname);
+			System.err.println("Service created");
 			impl = service.getPort(SoapProfiles.class);
-			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.REQUEST_TIMEOUT, ClientConstants.READ_TIMEOUT);
-			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, ClientConstants.READ_TIMEOUT);
+			System.err.println("impl created");
+			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.REQUEST_TIMEOUT, RetryClient.READ_TIMEOUT);
+			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, RetryClient.READ_TIMEOUT);
+			System.err.println("Building profiles client success");
 		}
 		return impl;
 	}
@@ -40,9 +44,10 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 	@Override
 	public Result<Profile> getProfile(String userId) {
 		try {
+			System.err.println("Soap getting profile...");
 			return Result.ok(impl().getProfile(userId));
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -52,7 +57,7 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 			impl().createProfile(profile);
 			return Result.ok();
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -62,7 +67,7 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 			impl().deleteProfile(userId);
 			return Result.ok();
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -71,7 +76,7 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 		try {
 			return Result.ok(impl().search(prefix));
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -81,7 +86,7 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 			impl().follow(userId1, userId2, isFollowing);
 			return Result.ok();
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -90,7 +95,7 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 		try {
 			return Result.ok(impl().isFollowing(userId1, userId2));
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -99,7 +104,7 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 		try {
 			return Result.ok(impl().getFollowees(userId));
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -109,7 +114,7 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 			impl().updateProfile(profile);
 			return Result.ok();
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -119,7 +124,7 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 			impl().updateNumberOfPosts(userId, increase);
 			return Result.ok();
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 

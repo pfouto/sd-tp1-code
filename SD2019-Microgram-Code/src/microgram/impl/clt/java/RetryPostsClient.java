@@ -7,7 +7,7 @@ import microgram.api.java.Posts;
 import microgram.api.java.Result;
 import utils.Sleep;
 
-public class RetryPostsClient implements Posts {
+public class RetryPostsClient extends RetryClient implements Posts {
 
 	final Posts impl;
 	
@@ -17,90 +17,42 @@ public class RetryPostsClient implements Posts {
 
 	@Override
 	public Result<Post> getPost(String postId) {
-		while(true)
-			try {
-				return impl.getPost(postId);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.getPost(postId));
 	}
 
 	@Override
 	public Result<String> createPost(Post post) {
-		while(true)
-			try {
-				return impl.createPost(post);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.createPost(post));
 	}
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		while(true)
-			try {
-				return impl.deletePost(postId);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.deletePost(postId));
 	}
 
 	@Override
 	public Result<Void> like(String postId, String userId, boolean isLiked) {
-		while(true)
-			try {
-				return impl.like(postId, userId, isLiked);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.like(postId, userId, isLiked));
 	}
 
 	@Override
 	public Result<Boolean> isLiked(String postId, String userId) {
-		while(true)
-			try {
-				return impl.isLiked(postId, userId);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.isLiked(postId, userId));
 	}
 
 	@Override
 	public Result<List<String>> getPosts(String userId) {
-		while(true)
-			try {
-				return impl.getPosts(userId);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.getPosts(userId));
 	}
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		while(true)
-			try {
-				return impl.getFeed(userId);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.getFeed(userId));
 	}
 
 	@Override
 	public Result<Void> unlikeAllPosts(String userId) {
-		while(true)
-			try {
-				return impl.unlikeAllPosts(userId);
-			} catch (Exception x) {
-				x.printStackTrace();
-				Sleep.ms(ClientConstants.RETRY_SLEEP);
-			}
+		return reTry(() -> impl.unlikeAllPosts(userId));
 	}
 
 }

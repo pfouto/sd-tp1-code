@@ -102,11 +102,15 @@ public class JavaPosts implements Posts {
 
     @Override
     public Result<List<String>> getPosts(String userId) {
+        System.err.println("Received getposts " + userId);
         Result<Profile> profile = profilesClient.getProfile(userId);
+        System.err.println("Result from getProfile: " + profile);
         if (profile.isOK()) {
+            System.err.println("OK!: " + profile);
             Set<String> res = userPosts.get(userId);
             return Result.ok(res != null ? new ArrayList<>(res) : new ArrayList<>());
         } else {
+            System.err.println("Error!: " + profile);
             return Result.error(profile.error());
         }
     }

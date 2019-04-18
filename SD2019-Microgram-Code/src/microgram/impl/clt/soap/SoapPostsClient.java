@@ -14,7 +14,7 @@ import microgram.api.java.Posts;
 import microgram.api.java.Result;
 import microgram.api.soap.MicrogramException;
 import microgram.api.soap.SoapPosts;
-import microgram.impl.clt.java.ClientConstants;
+import microgram.impl.clt.java.RetryClient;
 
 public class SoapPostsClient extends SoapClient implements Posts {
 
@@ -30,8 +30,8 @@ public class SoapPostsClient extends SoapClient implements Posts {
 		if( impl == null ) {
 			Service service = Service.create(super.wsdl(), qname);
 			impl = service.getPort(SoapPosts.class);
-			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.REQUEST_TIMEOUT, ClientConstants.READ_TIMEOUT);
-			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, ClientConstants.READ_TIMEOUT);
+			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.REQUEST_TIMEOUT, RetryClient.READ_TIMEOUT);
+			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, RetryClient.READ_TIMEOUT);
 		}
 		return impl;
 	}
