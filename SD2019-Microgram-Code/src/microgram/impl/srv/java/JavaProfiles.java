@@ -1,7 +1,6 @@
 package microgram.impl.srv.java;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import microgram.api.Profile;
-import microgram.api.java.Media;
 import microgram.api.java.Posts;
-import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.impl.clt.java.ClientFactory;
 import microgram.impl.srv.rest.RestResource;
@@ -26,7 +23,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	private Posts postsClient;
 
 	public JavaProfiles(URI postsUri) {
-		postsClient = ClientFactory.getPostsClient(postsUri);
+			postsClient = ClientFactory.getPostsClient(postsUri);
 	}
 
 	@Override

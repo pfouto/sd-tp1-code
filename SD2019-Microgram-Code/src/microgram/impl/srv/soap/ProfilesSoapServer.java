@@ -7,6 +7,7 @@ import utils.IP;
 import javax.xml.ws.Endpoint;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 
@@ -57,8 +58,9 @@ public class ProfilesSoapServer {
 		//while(postServers.length != posts)
 		URI[] postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
 
-		Endpoint soapEndpoint = Endpoint.create(new ProfilesWebService( postServers[0]));
+		Endpoint soapEndpoint = Endpoint.create(new ProfilesWebService( postServers[0] ));
 
+		server.setExecutor(Executors.newCachedThreadPool());
 		soapEndpoint.publish(server.createContext("/soap"));
 
 		server.start();

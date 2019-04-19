@@ -2,6 +2,7 @@ package microgram.impl.srv.soap;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import javax.xml.ws.Endpoint;
@@ -65,6 +66,7 @@ public class PostsSoapServer {
 
 		Endpoint soapEndpoint = Endpoint.create(new PostsWebService(profileServers[0], mediaServers[0]));
 
+		server.setExecutor(Executors.newCachedThreadPool());
 		soapEndpoint.publish(server.createContext("/soap"));
 
 		server.start();
