@@ -9,15 +9,15 @@ import microgram.api.Post;
 import microgram.api.java.Posts;
 import microgram.api.soap.MicrogramException;
 import microgram.api.soap.SoapPosts;
-import microgram.impl.srv.java.JavaPosts;
+import microgram.impl.srv.java.PostsDistributionCoordinator;
 
 @WebService(serviceName=SoapPosts.NAME, targetNamespace=SoapPosts.NAMESPACE, endpointInterface=SoapPosts.INTERFACE)
 public class PostsWebService extends SoapService implements SoapPosts {
 
 	final Posts impl;
 	
-	public PostsWebService(URI profilesUri, URI mediaUri) {
-		this.impl = new JavaPosts(profilesUri, mediaUri);
+	public PostsWebService(String myURL, URI[] postsUri, URI profilesUri, URI mediaUri) {
+		this.impl = new PostsDistributionCoordinator(myURL, postsUri, profilesUri, mediaUri);
 	}
 
 	@Override

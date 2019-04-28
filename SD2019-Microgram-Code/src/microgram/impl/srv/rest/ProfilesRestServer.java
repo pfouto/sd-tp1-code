@@ -1,19 +1,15 @@
 package microgram.impl.srv.rest;
 
 import java.net.URI;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import microgram.impl.srv.rest.utils.GenericExceptionMapper;
-import microgram.impl.srv.rest.utils.PrematchingRequestFilter;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import discovery.Discovery;
-import microgram.impl.srv.soap.PostsSoapServer;
-import microgram.impl.srv.soap.ProfilesSoapServer;
+import microgram.impl.srv.rest.utils.GenericExceptionMapper;
+import microgram.impl.srv.rest.utils.PrematchingRequestFilter;
 import utils.IP;
 
 

@@ -2,7 +2,6 @@ package microgram.impl.srv.java;
 
 import microgram.api.Post;
 import microgram.api.Profile;
-import microgram.api.java.Media;
 import microgram.api.java.Posts;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
@@ -11,19 +10,16 @@ import utils.Hash;
 
 import java.net.URI;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PostsDistributionCoordinator implements Posts {
 
     private Profiles profilesClient;
-    private Media mediaClient;
-
     private SortedMap<String, Posts> instances;
     private String[] serverURLs;
     
     public PostsDistributionCoordinator(String myServerURI, URI[] postsURIs, URI profilesUri, URI mediaUri) {
         profilesClient = ClientFactory.getProfilesClient(profilesUri);
-        mediaClient = ClientFactory.getMediaClient(mediaUri);
+        ClientFactory.getMediaClient(mediaUri);
        
         instances = new TreeMap<String, Posts>();
         
@@ -37,88 +33,52 @@ public class PostsDistributionCoordinator implements Posts {
         serverURLs = instances.keySet().toArray(new String[instances.keySet().size()]);
     }
 
-    private Posts getInstanceByUserId(String postId){
+    private Posts getInstanceByPostId(String postId){
     	int index = ((int) Character.toLowerCase(postId.charAt(0))) % serverURLs.length;
     	return instances.get(serverURLs[index]);
     }
     
     @Override
     public Result<Post> getPost(String postId) {
-        Post res = posts.get(postId);
-        return res != null ? Result.ok(res) : Result.error(Result.ErrorCode.NOT_FOUND);
+        return this.getInstanceByPostId(postId).getPost(postId);
     }
 
     @Override
     public Result<Void> deletePost(String postId) {
-        try {
-            Post p = posts.remove(postId);
-            if (p == null)
-                return Result.error(Result.ErrorCode.NOT_FOUND);
-
-            userPosts.get(p.getOwnerId()).remove(postId);
-            likes.remove(postId);
-
-            mediaClient.delete(p.getMediaUrl().substring(p.getMediaUrl().lastIndexOf('/') + 1));
-            profilesClient.updateNumberOfPosts(p.getOwnerId(), false);
-
-            return Result.ok();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Result.error(Result.ErrorCode.INTERNAL_ERROR);
-        }
-
+    	return this.getInstanceByPostId(postId).deletePost(postId);
     }
 
     @Override
     public Result<String> createPost(Post post) {
         String postId = Hash.of(post.getOwnerId(), post.getMediaUrl());
-        if (posts.putIfAbsent(postId, post) == null) {
-            likes.put(postId, ConcurrentHashMap.newKeySet());
-            Set<String> posts = userPosts.computeIfAbsent(post.getOwnerId(), k -> ConcurrentHashMap.newKeySet());
-            posts.add(postId);
-            profilesClient.updateNumberOfPosts(post.getOwnerId(), true);
-        }
-        return Result.ok(postId);
+        return this.getInstanceByPostId(postId).createPost(post);
     }
 
     @Override
     public Result<Void> like(String postId, String userId, boolean isLiked) {
-
-        Set<String> res = likes.get(postId);
-        if (res == null)
-            return Result.error(Result.ErrorCode.NOT_FOUND);
-
-        if (isLiked) {
-            if (!res.add(userId))
-                return Result.error(Result.ErrorCode.CONFLICT);
-        } else {
-            if (!res.remove(userId))
-                return Result.error(Result.ErrorCode.NOT_FOUND);
-        }
-
-        getPost(postId).value().setLikes(res.size());
-        return Result.ok();
+    	return this.getInstanceByPostId(postId).like(postId, userId, isLiked);
     }
 
     @Override
     public Result<Boolean> isLiked(String postId, String userId) {
-        Set<String> res = likes.get(postId);
-
-        if (res != null)
-            return Result.ok(res.contains(userId));
-        else
-            return Result.error(Result.ErrorCode.NOT_FOUND);
+    	return this.getInstanceByPostId(postId).isLiked(postId, userId);
     }
 
     @Override
     public Result<List<String>> getPosts(String userId) {
-        Result<Profile> profile = profilesClient.getProfile(userId);
-        if (profile.isOK()) {
-            Set<String> res = userPosts.get(userId);
-            return Result.ok(res != null ? new ArrayList<>(res) : new ArrayList<>());
-        } else {
-            return Result.error(profile.error());
-        }
+       Result<Profile> profile = profilesClient.getProfile(userId);
+       if( profile.isOK()) {
+	       List<String> posts = new ArrayList<String> ();
+	       for(Posts p: this.instances.values()) {
+	    	   Result<List<String>> r = p.getPosts(userId);
+	    	   if(r.isOK()) {
+	    		   posts.addAll(r.value());
+	    	   }
+	       }
+	       return Result.ok(posts);
+       } else {
+    	   return Result.error(profile.error());
+       }
     }
 
     @Override
@@ -129,9 +89,9 @@ public class PostsDistributionCoordinator implements Posts {
         if (followees.isOK()) {
             List<String> feed = new ArrayList<>();
             for (String user : followees.value()) {
-                Set<String> posts = userPosts.get(user);
-                if (posts != null)
-                    feed.addAll(posts);
+            	Result<List<String>> posts = this.getPosts(user);
+            	if(posts.isOK())
+                    feed.addAll(posts.value());
             }
             return Result.ok(feed);
         } else {
@@ -141,28 +101,10 @@ public class PostsDistributionCoordinator implements Posts {
 
     @Override
     public Result<Void> purgeProfileActivity(String userId) {
-
-        try {
-
-            Set<String> postsToRemove = userPosts.remove(userId);
-            if(postsToRemove != null) {
-                for (String s : postsToRemove) {
-                    Post p = posts.remove(s);
-                    likes.remove(s);
-                    mediaClient.delete(p.getMediaUrl().substring(p.getMediaUrl().lastIndexOf('/') + 1));
-                }
-            }
-
-            for (String post : likes.keySet()) {
-                if (likes.get(post).remove(userId)) {
-                    posts.get(post).setLikes(likes.get(post).size());
-                }
-            }
-
-            return Result.ok();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Result.error(Result.ErrorCode.INTERNAL_ERROR);
-        }
+    	for(Posts p: this.instances.values()) {
+    		p.purgeProfileActivity(userId);
+    	}
+    	
+    	return Result.ok();
     }
 }
