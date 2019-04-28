@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 
+@SuppressWarnings("restriction")
 public class ProfilesSoapServer {
 	private static Logger Log = Logger.getLogger(ProfilesSoapServer.class.getName());
 

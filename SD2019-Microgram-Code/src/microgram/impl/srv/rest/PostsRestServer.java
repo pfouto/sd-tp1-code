@@ -60,7 +60,7 @@ public class PostsRestServer {
 		while(postServers.length != posts) 
 			postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
 		
-		while(profileServers.length != profiles)
+		while(profileServers.length != 1)
 			profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, 1);
 		
 		while(mediaServers.length != 1)

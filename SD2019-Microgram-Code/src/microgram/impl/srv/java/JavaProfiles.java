@@ -4,10 +4,8 @@ import microgram.api.Profile;
 import microgram.api.java.Posts;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
-import microgram.impl.clt.java.ClientFactory;
 import microgram.impl.srv.rest.RestResource;
 
-import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +90,6 @@ public class JavaProfiles extends RestResource implements Profiles {
         return Result.error(NOT_IMPLEMENTED);
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public Result<Void> internalFollowFront(String userId1, String userId2, boolean isFollowing) {
         Set<String> s1 = following.get(userId1);
@@ -112,7 +109,6 @@ public class JavaProfiles extends RestResource implements Profiles {
         return Result.ok();
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public Result<Void> internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
         Set<String> s2 = followers.get(userId2);

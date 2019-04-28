@@ -2,7 +2,6 @@ package microgram.impl.clt.java;
 
 import microgram.api.java.Media;
 import microgram.api.java.Result;
-import utils.Sleep;
 
 
 public class RetryMediaClient extends RetryClient implements Media {

@@ -6,7 +6,6 @@ import java.util.Set;
 import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
-import utils.Sleep;
 
 public class RetryProfilesClient extends RetryClient implements Profiles {
 
