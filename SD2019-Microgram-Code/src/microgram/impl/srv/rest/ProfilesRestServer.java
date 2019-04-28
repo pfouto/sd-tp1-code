@@ -54,17 +54,20 @@ public class ProfilesRestServer {
 
 		Discovery.announce(SERVICE, serverURI);
 
-		//while(postServers.length != posts)
-		URI[] postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
+		URI[] profileServers = new URI[0], postsServers = new URI[0];
+		while(profileServers.length != profiles)
+			profileServers = Discovery.findUrisOf(ProfilesRestServer.SERVICE, profiles);
+		while(postsServers.length != 1)
+			postsServers = Discovery.findUrisOf(PostsRestServer.SERVICE, 1);
 
-		config.register(new RestProfilesResources(URI.create(serverURI), postServers[0]));
+
+
+		config.register(new RestProfilesResources(profileServers, postsServers[0]));
 		config.register(new GenericExceptionMapper());
 		config.register(new PrematchingRequestFilter());
 
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI.replace(ip, "0.0.0.0")), config);
 
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
-
-
 	}
 }

@@ -11,14 +11,15 @@ import microgram.api.java.Profiles;
 import microgram.api.soap.MicrogramException;
 import microgram.api.soap.SoapProfiles;
 import microgram.impl.srv.java.JavaProfiles;
+import microgram.impl.srv.java.ProfilesDistributionCoordinator;
 
 @WebService(serviceName=SoapProfiles.NAME, targetNamespace=SoapProfiles.NAMESPACE, endpointInterface=SoapProfiles.INTERFACE)
 public class ProfilesWebService extends SoapService implements SoapProfiles {
 
 	final Profiles impl;
 	
-	public ProfilesWebService(URI postsUri) {
-		this.impl = new JavaProfiles(postsUri);
+	public ProfilesWebService(URI[] profilesURIs, URI postsUri) {
+		this.impl = new ProfilesDistributionCoordinator(profilesURIs, postsUri);
 	}
 	
 	@Override

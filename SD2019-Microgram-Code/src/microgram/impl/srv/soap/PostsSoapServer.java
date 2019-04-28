@@ -27,16 +27,10 @@ public class PostsSoapServer {
 	public static String SERVER_BASE_URI = "http://%s:%s/soap";
 
 	public static void main(String[] args) throws Exception {
-		System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump",
-						   "true");
-
-		System.setProperty("com.sun.xml.internal.ws.transport.http.client.HttpTransportPipe.dump",
-						   "true");
-
+		System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
+		System.setProperty("com.sun.xml.internal.ws.transport.http.client.HttpTransportPipe.dump", "true");
 		System.setProperty("com.sun.xml.ws.transport.http.HttpAdapter.dump", "true");
-
-		System.setProperty("com.sun.xml.internal.ws.transport.http.HttpAdapter.dump",
-						   "true");
+		System.setProperty("com.sun.xml.internal.ws.transport.http.HttpAdapter.dump", "true");
 
 		HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", PORT), 0);
 
@@ -59,10 +53,13 @@ public class PostsSoapServer {
 		String ip = IP.hostAddress();
 		Discovery.announce(SERVICE, String.format(SERVER_BASE_URI, ip, PORT));
 
-		//while(profileServers.length != profiles)
-		URI[] profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
-		//while(mediaServers.length != 1)
-		URI[] mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
+		URI[] profileServers = new URI[0], mediaServers = new URI[0], postsServers = new URI[0];
+		while(profileServers.length != 1)
+			profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, 1);
+		while(postsServers.length != posts)
+			postsServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
+		while(mediaServers.length != 1)
+			mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
 
 		Endpoint soapEndpoint = Endpoint.create(new PostsWebService(profileServers[0], mediaServers[0]));
 

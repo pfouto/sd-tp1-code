@@ -77,7 +77,7 @@ public class Discovery {
 	 * 
 	 */
 	public static URI[] findUrisOf(String serviceName, int minRepliesNeeded) {
-		Set<URI> uris = new HashSet<URI>();
+		Set<URI> uris = new HashSet<>();
 
 		try (MulticastSocket ms = new MulticastSocket(PORT)) {
 			InetAddress group = InetAddress.getByName(ADDR);

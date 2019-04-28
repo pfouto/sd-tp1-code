@@ -8,13 +8,14 @@ import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.rest.RestProfiles;
 import microgram.impl.srv.java.JavaProfiles;
+import microgram.impl.srv.java.ProfilesDistributionCoordinator;
 
 public class RestProfilesResources extends RestResource implements RestProfiles {
 
 	final Profiles impl;
 	
-	public RestProfilesResources(URI serverUri, URI postsUri) {
-		this.impl = new JavaProfiles(postsUri);
+	public RestProfilesResources(URI[] profilesURIs, URI postsUri) {
+		this.impl = new ProfilesDistributionCoordinator(profilesURIs, postsUri);
 	}
 	
 	@Override

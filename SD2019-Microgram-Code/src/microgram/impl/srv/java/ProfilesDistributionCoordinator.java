@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import static microgram.api.java.Result.ErrorCode.INTERNAL_ERROR;
 
-public class JavaProfiles extends RestResource implements Profiles {
+public class ProfilesDistributionCoordinator extends RestResource implements Profiles {
 
     private Map<String, Profile> users = new ConcurrentHashMap<>();
     private Map<String, Set<String>> followers = new ConcurrentHashMap<>();
@@ -25,8 +25,8 @@ public class JavaProfiles extends RestResource implements Profiles {
 
     private Posts postsClient;
 
-    public JavaProfiles(Posts postsClient) {
-        this.postsClient = postsClient;
+    public ProfilesDistributionCoordinator(URI[] profilesURIs, URI postsURI) {
+        postsClient = ClientFactory.getPostsClient(postsURI);
     }
 
     @Override
