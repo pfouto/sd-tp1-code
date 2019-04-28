@@ -35,7 +35,13 @@ public interface SoapProfiles {
 	
 	@WebMethod
 	void follow( String userId1, String userId2, boolean isFollowing) throws MicrogramException;
-	
+
+	@WebMethod
+	void internalFollowFront( String userId1, String userId2, boolean isFollowing) throws MicrogramException;
+
+	@WebMethod
+	void internalFollowReverse( String userId1, String userId2, boolean isFollowing) throws MicrogramException;
+
 	@WebMethod
 	boolean isFollowing( String userId1, String userId2) throws MicrogramException;	
 	

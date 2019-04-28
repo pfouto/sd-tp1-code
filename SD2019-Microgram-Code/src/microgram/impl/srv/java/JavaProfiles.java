@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static microgram.api.java.Result.ErrorCode.INTERNAL_ERROR;
+import static microgram.api.java.Result.ErrorCode.NOT_IMPLEMENTED;
 
 public class JavaProfiles extends RestResource implements Profiles {
 
@@ -89,20 +90,44 @@ public class JavaProfiles extends RestResource implements Profiles {
 
     @Override
     public Result<Void> follow(String userId1, String userId2, boolean isFollowing) {
+        return Result.error(NOT_IMPLEMENTED);
+    }
 
+    @SuppressWarnings("Duplicates")
+    @Override
+    public Result<Void> internalFollowFront(String userId1, String userId2, boolean isFollowing) {
         Set<String> s1 = following.get(userId1);
-        Set<String> s2 = followers.get(userId2);
 
-        if (s1 == null || s2 == null)
+        if (s1 == null)
             return Result.error(Result.ErrorCode.NOT_FOUND);
 
         if (isFollowing) {
-            boolean added1 = s1.add(userId2), added2 = s2.add(userId1);
-            if (!added1 || !added2)
+            boolean added1 = s1.add(userId2);
+            if (!added1)
                 return Result.error(Result.ErrorCode.CONFLICT);
         } else {
-            boolean removed1 = s1.remove(userId2), removed2 = s2.remove(userId1);
-            if (!removed1 || !removed2)
+            boolean removed1 = s1.remove(userId2);
+            if (!removed1)
+                return Result.error(Result.ErrorCode.NOT_FOUND);
+        }
+        return Result.ok();
+    }
+
+    @SuppressWarnings("Duplicates")
+    @Override
+    public Result<Void> internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
+        Set<String> s2 = followers.get(userId2);
+
+        if (s2 == null)
+            return Result.error(Result.ErrorCode.NOT_FOUND);
+
+        if (isFollowing) {
+            boolean added2 = s2.add(userId1);
+            if (!added2)
+                return Result.error(Result.ErrorCode.CONFLICT);
+        } else {
+            boolean removed2 = s2.remove(userId1);
+            if (!removed2)
                 return Result.error(Result.ErrorCode.NOT_FOUND);
         }
         return Result.ok();

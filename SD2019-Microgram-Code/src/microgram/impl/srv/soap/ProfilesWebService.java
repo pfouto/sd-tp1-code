@@ -48,6 +48,16 @@ public class ProfilesWebService extends SoapService implements SoapProfiles {
 	}
 
 	@Override
+	public void internalFollowFront(String userId1, String userId2, boolean isFollowing) throws MicrogramException {
+		super.resultOrThrow( impl.internalFollowFront(userId1, userId2, isFollowing));
+	}
+
+	@Override
+	public void internalFollowReverse(String userId1, String userId2, boolean isFollowing) throws MicrogramException {
+		super.resultOrThrow( impl.internalFollowReverse(userId1, userId2, isFollowing));
+	}
+
+	@Override
 	public boolean isFollowing(String userId1, String userId2) throws MicrogramException {
 		return super.resultOrThrow( impl.isFollowing(userId1, userId2));
 	}

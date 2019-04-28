@@ -1,18 +1,18 @@
 package microgram.impl.srv.java;
 
 import microgram.api.Profile;
-import microgram.api.java.Posts;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.impl.clt.java.ClientFactory;
 import microgram.impl.srv.rest.RestResource;
 
 import java.net.URI;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-import static microgram.api.java.Result.ErrorCode.INTERNAL_ERROR;
+import static microgram.api.java.Result.ErrorCode.NOT_IMPLEMENTED;
 
 public class ProfilesDistributionCoordinator extends RestResource implements Profiles {
 
@@ -59,25 +59,26 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
     @Override
     public Result<Void> follow(String userId1, String userId2, boolean isFollowing) {
 
-        getInstanceByUserId(userId1).follow(userId1, userId2, isFollowing);
-        getInstanceByUserId(userId2).follow(userId1, userId2, isFollowing);
+        Result<Void> res1 = getInstanceByUserId(userId1).internalFollowFront(userId1, userId2, isFollowing);
+        Result<Void> res2 = getInstanceByUserId(userId2).internalFollowReverse(userId1, userId2, isFollowing);
 
-        Set<String> s1 = following.get(userId1);
-        Set<String> s2 = followers.get(userId2);
+        if(res1.isOK() && res2.isOK())
+            return res1;
+        else if (!res1.isOK())
+            return res1;
+        else
+            return res2;
 
-        if (s1 == null || s2 == null)
-            return Result.error(Result.ErrorCode.NOT_FOUND);
+    }
 
-        if (isFollowing) {
-            boolean added1 = s1.add(userId2), added2 = s2.add(userId1);
-            if (!added1 || !added2)
-                return Result.error(Result.ErrorCode.CONFLICT);
-        } else {
-            boolean removed1 = s1.remove(userId2), removed2 = s2.remove(userId1);
-            if (!removed1 || !removed2)
-                return Result.error(Result.ErrorCode.NOT_FOUND);
-        }
-        return Result.ok();
+    @Override
+    public Result<Void> internalFollowFront(String userId1, String userId2, boolean isFollowing) {
+        return Result.error(NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public Result<Void> internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
+        return Result.error(NOT_IMPLEMENTED);
     }
 
     @Override

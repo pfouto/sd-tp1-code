@@ -10,9 +10,9 @@ import microgram.api.Post;
 @WebService(serviceName=SoapPosts.NAME, targetNamespace=SoapPosts.NAMESPACE, endpointInterface=SoapPosts.INTERFACE)
 public interface SoapPosts {
 	
-	static final String NAME = "posts";
-	static final String NAMESPACE = "http://sd2019";
-	static final String INTERFACE = "microgram.api.soap.SoapPosts";
+	String NAME = "posts";
+	String NAMESPACE = "http://sd2019";
+	String INTERFACE = "microgram.api.soap.SoapPosts";
 	
 	@WebMethod
 	Post getPost( String postId ) throws MicrogramException;

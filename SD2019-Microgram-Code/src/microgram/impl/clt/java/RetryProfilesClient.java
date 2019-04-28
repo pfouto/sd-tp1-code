@@ -42,6 +42,16 @@ public class RetryProfilesClient extends RetryClient implements Profiles {
 	}
 
 	@Override
+	public Result<Void> internalFollowFront(String userId1, String userId2, boolean isFollowing) {
+		return reTry(() -> impl.internalFollowFront(userId1, userId2, isFollowing));
+	}
+
+	@Override
+	public Result<Void> internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
+		return reTry(() -> impl.internalFollowReverse(userId1, userId2, isFollowing));
+	}
+
+	@Override
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
 		return reTry(() -> impl.isFollowing(userId1, userId2));
 	}

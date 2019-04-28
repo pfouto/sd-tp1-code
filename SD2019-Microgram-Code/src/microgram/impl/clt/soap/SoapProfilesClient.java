@@ -86,6 +86,26 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 	}
 
 	@Override
+	public Result<Void> internalFollowFront(String userId1, String userId2, boolean isFollowing) {
+		try {
+			impl().internalFollowFront(userId1, userId2, isFollowing);
+			return Result.ok();
+		} catch (MicrogramException e) {
+			return Result.error(errorCode(e));
+		}
+	}
+
+	@Override
+	public Result<Void> internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
+		try {
+			impl().internalFollowReverse(userId1, userId2, isFollowing);
+			return Result.ok();
+		} catch (MicrogramException e) {
+			return Result.error(errorCode(e));
+		}
+	}
+
+	@Override
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
 		try {
 			return Result.ok(impl().isFollowing(userId1, userId2));

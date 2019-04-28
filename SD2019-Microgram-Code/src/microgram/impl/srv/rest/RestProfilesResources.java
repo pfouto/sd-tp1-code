@@ -44,6 +44,16 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 	}
 
 	@Override
+	public void internalFollowFront(String userId1, String userId2, boolean isFollowing) {
+		super.resultOrThrow(impl.internalFollowFront(userId1, userId2, isFollowing));
+	}
+
+	@Override
+	public void internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
+		super.resultOrThrow(impl.internalFollowReverse(userId1, userId2, isFollowing));
+	}
+
+	@Override
 	public boolean isFollowing(String userId1, String userId2) {
 		return super.resultOrThrow(impl.isFollowing(userId1, userId2));
 	}
