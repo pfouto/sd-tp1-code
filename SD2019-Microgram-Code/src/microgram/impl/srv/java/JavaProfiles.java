@@ -50,8 +50,8 @@ public class JavaProfiles extends RestResource implements Profiles {
                 return Result.error(Result.ErrorCode.CONFLICT);
             }
 
-            followers.put(profile.getUserId(), new HashSet<>());
-            following.put(profile.getUserId(), new HashSet<>());
+            followers.put(profile.getUserId(), ConcurrentHashMap.newKeySet());
+            following.put(profile.getUserId(), ConcurrentHashMap.newKeySet());
 
             return Result.ok();
         } catch (Exception e) {
