@@ -112,12 +112,10 @@ public class JavaProfiles extends RestResource implements Profiles {
     public Result<Boolean> isFollowing(String userId1, String userId2) {
 
         Set<String> s1 = following.get(userId1);
-        Set<String> s2 = followers.get(userId2);
-
-        if (s1 == null || s2 == null)
+        if (s1 == null)
             return Result.error(Result.ErrorCode.NOT_FOUND);
         else
-            return Result.ok(s1.contains(userId2) && s2.contains(userId1));
+            return Result.ok(s1.contains(userId2));
     }
 
     @Override
