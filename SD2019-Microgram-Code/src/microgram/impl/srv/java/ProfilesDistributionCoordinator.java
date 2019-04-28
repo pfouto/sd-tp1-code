@@ -16,22 +16,27 @@ import static microgram.api.java.Result.ErrorCode.INTERNAL_ERROR;
 
 public class ProfilesDistributionCoordinator extends RestResource implements Profiles {
 
-    private Map<String, Profile> users = new ConcurrentHashMap<>();
-    private Map<String, Set<String>> followers = new ConcurrentHashMap<>();
-    private Map<String, Set<String>> following = new ConcurrentHashMap<>();
+	private Posts postsClient;
 
-    private Posts postsClient;
-
-    private TreeMap<String, Profiles> instances;
+    private SortedMap<String, Profiles> instances;
+    private String[] serverURLs;
 
     public ProfilesDistributionCoordinator(String myServerURI, URI[] profilesURIs, URI postsURI) {
         postsClient = ClientFactory.getPostsClient(postsURI);
-
-
+        instances = new TreeMap<String, Profiles>();
+        for(URI u: profilesURIs) {
+        	if ( u.toString().equalsIgnoreCase(myServerURI) ) {
+        		instances.put(u.toString(), new JavaProfiles(postsClient));
+        	} else {
+        		instances.put(u.toString(), ClientFactory.getProfilesClient(u));
+        	}
+        }
+        serverURLs = instances.keySet().toArray(new String[instances.keySet().size()]);
     }
 
     private Profiles getInstanceByUserId(String userId){
-        return null;
+    	int index = ((int) Character.toLowerCase(userId.charAt(0))) % serverURLs.length;
+    	return instances.get(serverURLs[index]);
     }
 
     @Override
