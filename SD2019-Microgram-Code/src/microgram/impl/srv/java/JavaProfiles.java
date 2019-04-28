@@ -51,9 +51,10 @@ public class JavaProfiles extends RestResource implements Profiles {
 
             followers.put(profile.getUserId(), new HashSet<>());
             following.put(profile.getUserId(), new HashSet<>());
-
+            System.err.println("Internal create: " + profile.getUserId());
             return Result.ok();
         } catch (Exception e) {
+            System.err.println("Internal create: " + profile.getUserId() + " error: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }

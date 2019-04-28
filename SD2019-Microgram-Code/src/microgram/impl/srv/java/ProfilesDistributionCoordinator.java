@@ -46,10 +46,13 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
     @Override
     public Result<Void> createProfile(Profile profile) {
         try {
-            System.out.println("Create profile: " + profile.getUserId());
-            return getInstanceByUserId(profile.getUserId()).createProfile(profile);
+            System.err.println("Create profile: " + profile.getUserId());
+            Result<Void> profile1 = getInstanceByUserId(profile.getUserId()).createProfile(profile);
+            System.err.println("Create profile: " + profile.getUserId() + " result: " + profile1.error());
+            return profile1;
         } catch (Exception e){
             e.printStackTrace();
+            System.out.println("Create profile err: " + profile.getUserId() + " result: " + e.getMessage());
             return Result.error(INTERNAL_ERROR);
         }
     }
