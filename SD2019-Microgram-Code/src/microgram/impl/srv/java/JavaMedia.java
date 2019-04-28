@@ -9,58 +9,55 @@ import java.nio.file.Files;
 
 public class JavaMedia implements Media {
 
-	private static final String MEDIA_EXTENSION = ".jpg";
-	private static final String ROOT_DIR = "/tmp/microgram/";
+    private static final String MEDIA_EXTENSION = ".jpg";
+    private static final String ROOT_DIR = "/tmp/microgram/";
 
-	private final String baseUri;
+    private final String baseUri;
 
-	public JavaMedia(String baseUri) {
-		this.baseUri = baseUri;
-		new File(ROOT_DIR).mkdirs();
-	}
+    public JavaMedia(String baseUri) {
+        this.baseUri = baseUri;
+        new File(ROOT_DIR).mkdirs();
+    }
 
-	@Override
-	public Result<String> upload(byte[] bytes) {
-		try {
-			String id = Hash.of(bytes);
-			System.err.println("Upload over: " + id);
-			File filename = new File(ROOT_DIR + id + MEDIA_EXTENSION);
-			if(!filename.exists()) 
-				Files.write(filename.toPath(), bytes);
-			return Result.ok(baseUri + "/" + id);
-		} catch (Exception x) {
-			x.printStackTrace();
-			return Result.error(Result.ErrorCode.INTERNAL_ERROR);
-		}
-	}
+    @Override
+    public Result<String> upload(byte[] bytes) {
+        try {
+            String id = Hash.of(bytes);
+            File filename = new File(ROOT_DIR + id + MEDIA_EXTENSION);
+            if (!filename.exists())
+                Files.write(filename.toPath(), bytes);
+            return Result.ok(baseUri + "/" + id);
+        } catch (Exception x) {
+            x.printStackTrace();
+            return Result.error(Result.ErrorCode.INTERNAL_ERROR);
+        }
+    }
 
-	@Override
-	public Result<byte[]> download(String id) {
-		try {
-			File filename = new File(ROOT_DIR + id + MEDIA_EXTENSION);
-			if (filename.exists())
-				return Result.ok(Files.readAllBytes(filename.toPath()));
-			else
-				return Result.error(Result.ErrorCode.NOT_FOUND);
-		} catch (Exception x) {
-			x.printStackTrace();
-			return Result.error(Result.ErrorCode.INTERNAL_ERROR);
-		}
-	}
+    @Override
+    public Result<byte[]> download(String id) {
+        try {
+            File filename = new File(ROOT_DIR + id + MEDIA_EXTENSION);
+            if (filename.exists())
+                return Result.ok(Files.readAllBytes(filename.toPath()));
+            else
+                return Result.error(Result.ErrorCode.NOT_FOUND);
+        } catch (Exception x) {
+            x.printStackTrace();
+            return Result.error(Result.ErrorCode.INTERNAL_ERROR);
+        }
+    }
 
-	@Override
-	public Result<Void> delete(String id) {
-		System.err.println("Delete over: " + id);
-		try {
-			File filename = new File(ROOT_DIR + id + MEDIA_EXTENSION);
-			if (filename.exists()) {
-				Files.delete(filename.toPath());
-				return Result.ok();
-			} else
-				return Result.error(Result.ErrorCode.NOT_FOUND);
-		} catch (Exception x) {
-			x.printStackTrace();
-			return Result.error(Result.ErrorCode.INTERNAL_ERROR);
-		}
-	}
+    @Override
+    public Result<Void> delete(String id) {
+        try {
+            File filename = new File(ROOT_DIR + id + MEDIA_EXTENSION);
+            if (!filename.exists())
+                return Result.error(Result.ErrorCode.NOT_FOUND);
+            Files.delete(filename.toPath());
+            return Result.ok();
+        } catch (Exception x) {
+            x.printStackTrace();
+            return Result.error(Result.ErrorCode.INTERNAL_ERROR);
+        }
+    }
 }

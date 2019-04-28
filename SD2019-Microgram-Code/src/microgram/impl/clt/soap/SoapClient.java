@@ -24,7 +24,6 @@ abstract class SoapClient {
 	protected URL wsdl() {
 		try {
 			URL url = new URL(uri.toString() + WSDL);
-			System.err.println("wsdl: " + url.toString());
 			return url;
 		} catch (Exception x) {
 			throw new RuntimeException(x.getMessage());

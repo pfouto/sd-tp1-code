@@ -29,14 +29,10 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 
 	private SoapProfiles impl() {
 		if( impl == null ) {
-			System.err.println("Building profiles client");
 			Service service = Service.create(super.wsdl(), qname);
-			System.err.println("Service created");
 			impl = service.getPort(SoapProfiles.class);
-			System.err.println("impl created");
 			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.REQUEST_TIMEOUT, RetryClient.READ_TIMEOUT);
 			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, RetryClient.READ_TIMEOUT);
-			System.err.println("Building profiles client success");
 		}
 		return impl;
 	}
@@ -44,7 +40,6 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 	@Override
 	public Result<Profile> getProfile(String userId) {
 		try {
-			System.err.println("Soap getting profile...");
 			return Result.ok(impl().getProfile(userId));
 		} catch (MicrogramException e) {
 			return Result.error(errorCode(e));

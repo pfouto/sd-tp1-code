@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class JavaPosts implements Posts {
 
-    protected Map<String, Post> posts = new ConcurrentHashMap<>();
-    protected Map<String, Set<String>> likes = new ConcurrentHashMap<>();
-    protected Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
+    private Map<String, Post> posts = new ConcurrentHashMap<>();
+    private Map<String, Set<String>> likes = new ConcurrentHashMap<>();
+    private Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
 
     private Profiles profilesClient;
     private Media mediaClient;
@@ -30,23 +30,18 @@ public class JavaPosts implements Posts {
     @Override
     public Result<Post> getPost(String postId) {
         Post res = posts.get(postId);
-        if (res != null)
-            return Result.ok(res);
-        else
-            return Result.error(Result.ErrorCode.NOT_FOUND);
+        return res != null ? Result.ok(res) : Result.error(Result.ErrorCode.NOT_FOUND);
     }
 
     @Override
     public Result<Void> deletePost(String postId) {
-
         try {
-            Post p = this.posts.remove(postId);
-            if (p == null) {
+            Post p = posts.remove(postId);
+            if (p == null)
                 return Result.error(Result.ErrorCode.NOT_FOUND);
-            }
 
-            this.userPosts.get(p.getOwnerId()).remove(postId);
-            this.likes.remove(postId);
+            userPosts.get(p.getOwnerId()).remove(postId);
+            likes.remove(postId);
 
             mediaClient.delete(p.getMediaUrl().substring(p.getMediaUrl().lastIndexOf('/') + 1));
             profilesClient.updateNumberOfPosts(p.getOwnerId(), false);
@@ -102,15 +97,11 @@ public class JavaPosts implements Posts {
 
     @Override
     public Result<List<String>> getPosts(String userId) {
-        System.err.println("Received getposts " + userId);
         Result<Profile> profile = profilesClient.getProfile(userId);
-        System.err.println("Result from getProfile: " + profile);
         if (profile.isOK()) {
-            System.err.println("OK!: " + profile);
             Set<String> res = userPosts.get(userId);
             return Result.ok(res != null ? new ArrayList<>(res) : new ArrayList<>());
         } else {
-            System.err.println("Error!: " + profile);
             return Result.error(profile.error());
         }
     }
@@ -121,9 +112,9 @@ public class JavaPosts implements Posts {
         Result<Set<String>> followees = profilesClient.getFollowees(userId);
 
         if (followees.isOK()) {
-            List<String> feed = new ArrayList<String>();
+            List<String> feed = new ArrayList<>();
             for (String user : followees.value()) {
-                Set<String> posts = this.userPosts.get(user);
+                Set<String> posts = userPosts.get(user);
                 if (posts != null)
                     feed.addAll(posts);
             }
@@ -136,10 +127,10 @@ public class JavaPosts implements Posts {
     @Override
     public Result<Void> unlikeAllPosts(String userId) {
         boolean found = false;
-        for (String post : this.likes.keySet()) {
-            if (this.likes.get(post).remove(userId)) {
+        for (String post : likes.keySet()) {
+            if (likes.get(post).remove(userId)) {
                 found = true;
-                this.posts.get(post).setLikes(this.likes.get(post).size());
+                posts.get(post).setLikes(likes.get(post).size());
             }
         }
 

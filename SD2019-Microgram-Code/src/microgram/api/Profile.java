@@ -21,9 +21,11 @@ public class Profile {
 	AtomicInteger posts;
 	int following;
 	int followers;
-	
-	public Profile() {}
-	
+
+	public Profile() {
+		this.posts = new AtomicInteger(0);
+	}
+
 	public Profile(String userId, String fullName, String photoUrl, int posts, int following, int followers) {
 		this.userId = userId;
 		this.fullName = fullName;
@@ -31,6 +33,18 @@ public class Profile {
 		this.posts = new AtomicInteger(posts);
 		this.following = following;
 		this.followers = followers;
+	}
+
+	@Override
+	public String toString() {
+		return "Profile{" +
+				"userId='" + userId + '\'' +
+				", fullName='" + fullName + '\'' +
+				", photoUrl='" + photoUrl + '\'' +
+				", posts=" + posts +
+				", following=" + following +
+				", followers=" + followers +
+				'}';
 	}
 
 	public String getUserId() {
@@ -59,6 +73,10 @@ public class Profile {
 
 	public int getPosts() {
 		return posts.get();
+	}
+
+	public void setPosts(int posts) {
+		this.posts = new AtomicInteger(posts);
 	}
 
 	public void incPosts(boolean inc) {
