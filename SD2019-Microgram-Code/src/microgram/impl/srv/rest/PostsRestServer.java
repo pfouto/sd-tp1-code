@@ -51,15 +51,24 @@ public class PostsRestServer {
 		String serverURI = String.format(SERVER_BASE_URI, ip, PORT);
 
 		Discovery.announce(SERVICE, serverURI);
-
-		//while(profileServers.length != profiles)
-		URI[] profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, profiles);
-		//while(mediaServers.length != 1)
-		URI[] mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
+		
+		URI[] postServers = new URI[0];
+		URI[] profileServers = new URI[0];
+		URI[] mediaServers = new URI[0];
+		
+		
+		while(postServers.length != posts) 
+			postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
+		
+		while(profileServers.length != profiles)
+			profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, 1);
+		
+		while(mediaServers.length != 1)
+			mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
 
 		ResourceConfig config = new ResourceConfig();
 
-		config.register(new RestPostsResources(URI.create(serverURI), profileServers[0], mediaServers[0]));
+		config.register(new RestPostsResources(serverURI, postServers, profileServers[0], mediaServers[0]));
 		config.register(new GenericExceptionMapper());
 		config.register(new PrematchingRequestFilter());
 
