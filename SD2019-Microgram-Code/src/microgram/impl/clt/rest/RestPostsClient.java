@@ -72,8 +72,8 @@ public class RestPostsClient extends RestClient implements Posts {
 	}
 
 	@Override
-	public Result<Void> unlikeAllPosts(String userId) {
-		Response r = target.path("likes").path(userId).request().delete();
+	public Result<Void> purgeProfileActivity(String userId) {
+		Response r = target.path("purge").path(userId).request().delete();
 		return verifyResponse(r, Status.NO_CONTENT);
 	}
 }

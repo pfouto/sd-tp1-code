@@ -5,7 +5,6 @@ import java.util.List;
 import microgram.api.Post;
 import microgram.api.java.Posts;
 import microgram.api.java.Result;
-import utils.Sleep;
 
 public class RetryPostsClient extends RetryClient implements Posts {
 
@@ -51,8 +50,8 @@ public class RetryPostsClient extends RetryClient implements Posts {
 	}
 
 	@Override
-	public Result<Void> unlikeAllPosts(String userId) {
-		return reTry(() -> impl.unlikeAllPosts(userId));
+	public Result<Void> purgeProfileActivity(String userId) {
+		return reTry(() -> impl.purgeProfileActivity(userId));
 	}
 
 }

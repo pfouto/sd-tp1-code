@@ -49,8 +49,8 @@ static final String PATH="/posts";
 	void like( @PathParam("postId") String postId, @PathParam("userId") String userId, boolean isLiked);
 		
 	@DELETE
-	@Path("/likes/{userId}")
-	void unlikeAllPosts( @PathParam("userId") String userId);
+	@Path("/purge/{userId}")
+	void purgeProfileActivity(@PathParam("userId") String userId);
 	
 	@GET
 	@Path("/from/{userId}")

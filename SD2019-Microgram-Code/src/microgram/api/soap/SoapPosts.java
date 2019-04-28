@@ -24,7 +24,7 @@ public interface SoapPosts {
 	String createPost( Post post ) throws MicrogramException;
 
 	@WebMethod
-	void unlikeAllPosts(String userId) throws MicrogramException;
+	void purgeProfileActivity(String userId) throws MicrogramException;
 	
 	@WebMethod
 	boolean isLiked(String postId, String userId) throws MicrogramException;

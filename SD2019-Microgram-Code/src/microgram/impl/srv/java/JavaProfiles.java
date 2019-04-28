@@ -65,31 +65,20 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
     @Override
     public Result<Void> deleteProfile(String userId) {
         Profile p = users.remove(userId);
-        if (p != null) {
-
-            Set<String> myFollowees = following.remove(userId);
-            Set<String> myFollowers = followers.remove(userId);
-
-            for (String followee : myFollowees)
-                followers.get(followee).remove(userId);
-
-            for (String follower : myFollowers)
-                following.get(follower).remove(userId);
-
-            //TODO replace all this with "purgeAllUserInfo" or something - avoids multiple rounds and crossed requests...
-            Result<List<String>> posts = postsClient.getPosts(userId);
-
-            if (posts.isOK()) {
-                for (String post : posts.value()) {
-                    postsClient.deletePost(post);
-                }
-            }
-
-            postsClient.unlikeAllPosts(userId);
-            return Result.ok();
-        } else {
+        if (p == null)
             return Result.error(Result.ErrorCode.NOT_FOUND);
-        }
+
+        Set<String> myFollowees = following.remove(userId);
+        Set<String> myFollowers = followers.remove(userId);
+
+        for (String followee : myFollowees)
+            followers.get(followee).remove(userId);
+
+        for (String follower : myFollowers)
+            following.get(follower).remove(userId);
+
+        postsClient.purgeProfileActivity(userId);
+        return Result.ok();
     }
 
     @Override
@@ -101,7 +90,6 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
     @Override
     public Result<Void> follow(String userId1, String userId2, boolean isFollowing) {
-
 
         Set<String> s1 = following.get(userId1);
         Set<String> s2 = followers.get(userId2);

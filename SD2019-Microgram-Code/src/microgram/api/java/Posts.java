@@ -47,11 +47,11 @@ public interface Posts {
 	Result<Void> like(String postId, String userId, boolean isLiked);
 
 	/**
-	 * Removes all likes previously issued by an user
+	 * Removes all posts and all likes previously issued by an user
 	 * @param userId the user whose likes will be removed
-	 * @return (OK,) or NOT_FOUND if the userId had not liked any post
+	 * @return (OK,)
 	 */
-	Result<Void> unlikeAllPosts(String userId);
+	Result<Void> purgeProfileActivity(String userId);
 	
 	/**
 	 * Determines if a post is liked by a user.

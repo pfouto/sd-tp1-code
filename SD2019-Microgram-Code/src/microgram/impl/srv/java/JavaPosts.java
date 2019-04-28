@@ -125,18 +125,29 @@ public class JavaPosts implements Posts {
     }
 
     @Override
-    public Result<Void> unlikeAllPosts(String userId) {
-        boolean found = false;
-        for (String post : likes.keySet()) {
-            if (likes.get(post).remove(userId)) {
-                found = true;
-                posts.get(post).setLikes(likes.get(post).size());
+    public Result<Void> purgeProfileActivity(String userId) {
+
+        try {
+
+            Set<String> postsToRemove = userPosts.remove(userId);
+            if(postsToRemove != null) {
+                for (String s : postsToRemove) {
+                    Post p = posts.remove(s);
+                    likes.remove(s);
+                    mediaClient.delete(p.getMediaUrl().substring(p.getMediaUrl().lastIndexOf('/') + 1));
+                }
             }
-        }
 
-        if (found)
+            for (String post : likes.keySet()) {
+                if (likes.get(post).remove(userId)) {
+                    posts.get(post).setLikes(likes.get(post).size());
+                }
+            }
+
             return Result.ok();
-
-        return Result.error(Result.ErrorCode.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error(Result.ErrorCode.INTERNAL_ERROR);
+        }
     }
 }

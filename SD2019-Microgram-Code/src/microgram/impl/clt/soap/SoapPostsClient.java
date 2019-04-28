@@ -103,9 +103,9 @@ public class SoapPostsClient extends SoapClient implements Posts {
 	}
 
 	@Override
-	public Result<Void> unlikeAllPosts(String userId) {
+	public Result<Void> purgeProfileActivity(String userId) {
 		try {
-			impl().unlikeAllPosts(userId);
+			impl().purgeProfileActivity(userId);
 			return Result.ok();
 		} catch (MicrogramException e) {
 			return Result.error(super.errorCode(e));

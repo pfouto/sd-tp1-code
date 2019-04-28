@@ -56,8 +56,7 @@ public class PostsWebService extends SoapService implements SoapPosts {
 	}
 
 	@Override
-	public void unlikeAllPosts(String userId) throws MicrogramException {
-		super.resultOrThrow( impl.getFeed(userId));
-		
+	public void purgeProfileActivity(String userId) throws MicrogramException {
+		super.resultOrThrow( impl.purgeProfileActivity(userId));
 	}
 }

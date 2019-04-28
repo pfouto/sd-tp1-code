@@ -52,8 +52,8 @@ public class RestPostsResources extends RestResource implements RestPosts {
 	}
 
 	@Override
-	public void unlikeAllPosts(String userId) {
-		super.resultOrThrow(impl.unlikeAllPosts(userId));
+	public void purgeProfileActivity(String userId) {
+		super.resultOrThrow(impl.purgeProfileActivity(userId));
 		
 	}
  
