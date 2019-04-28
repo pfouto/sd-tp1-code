@@ -56,7 +56,7 @@ public class JavaProfiles extends RestResource implements Profiles {
             return Result.ok();
         } catch (Exception e) {
             e.printStackTrace();
-            return Result.error(INTERNAL_ERROR);
+            throw e;
         }
     }
 
