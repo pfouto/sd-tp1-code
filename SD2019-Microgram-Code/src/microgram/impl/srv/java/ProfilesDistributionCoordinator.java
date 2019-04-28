@@ -8,10 +8,7 @@ import microgram.impl.clt.java.ClientFactory;
 import microgram.impl.srv.rest.RestResource;
 
 import java.net.URI;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -25,8 +22,16 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
 
     private Posts postsClient;
 
-    public ProfilesDistributionCoordinator(URI[] profilesURIs, URI postsURI) {
+    private TreeMap<String, Profiles> instances;
+
+    public ProfilesDistributionCoordinator(String myServerURI, URI[] profilesURIs, URI postsURI) {
         postsClient = ClientFactory.getPostsClient(postsURI);
+
+
+    }
+
+    private Profiles getInstanceByUserId(String userId){
+        return null;
     }
 
     @Override

@@ -18,8 +18,8 @@ public class ProfilesWebService extends SoapService implements SoapProfiles {
 
 	final Profiles impl;
 	
-	public ProfilesWebService(URI[] profilesURIs, URI postsUri) {
-		this.impl = new ProfilesDistributionCoordinator(profilesURIs, postsUri);
+	public ProfilesWebService(String serverURI, URI[] profilesURIs, URI postsUri) {
+		this.impl = new ProfilesDistributionCoordinator(serverURI, profilesURIs, postsUri);
 	}
 	
 	@Override

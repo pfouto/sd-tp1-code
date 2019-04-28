@@ -1,6 +1,8 @@
 package microgram.impl.srv.rest;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,9 +62,7 @@ public class ProfilesRestServer {
 		while(postsServers.length != 1)
 			postsServers = Discovery.findUrisOf(PostsRestServer.SERVICE, 1);
 
-
-
-		config.register(new RestProfilesResources(profileServers, postsServers[0]));
+		config.register(new RestProfilesResources(serverURI, profileServers, postsServers[0]));
 		config.register(new GenericExceptionMapper());
 		config.register(new PrematchingRequestFilter());
 

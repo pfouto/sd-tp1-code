@@ -47,7 +47,8 @@ public class ProfilesSoapServer {
 			throw new RuntimeException("Invalid number of servers in input.");
 
 		String ip = IP.hostAddress();
-		Discovery.announce(SERVICE, String.format(SERVER_BASE_URI, ip, PORT));
+		String serverURI = String.format(SERVER_BASE_URI, ip, PORT);
+		Discovery.announce(SERVICE, serverURI);
 
 		URI[] profileServers = new URI[0], postsServers = new URI[0];
 		while(profileServers.length != profiles)
@@ -55,7 +56,7 @@ public class ProfilesSoapServer {
 		while(postsServers.length != 1)
 			postsServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, 1);
 
-		Endpoint soapEndpoint = Endpoint.create(new ProfilesWebService(profileServers, postsServers[0] ));
+		Endpoint soapEndpoint = Endpoint.create(new ProfilesWebService(serverURI, profileServers, postsServers[0] ));
 
 		server.setExecutor(Executors.newCachedThreadPool());
 		soapEndpoint.publish(server.createContext("/soap"));

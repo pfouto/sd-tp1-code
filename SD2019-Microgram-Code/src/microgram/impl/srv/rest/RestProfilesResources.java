@@ -14,8 +14,8 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 
 	final Profiles impl;
 	
-	public RestProfilesResources(URI[] profilesURIs, URI postsUri) {
-		this.impl = new ProfilesDistributionCoordinator(profilesURIs, postsUri);
+	public RestProfilesResources(String serverURI, URI[] profilesURIs, URI postsUri) {
+		this.impl = new ProfilesDistributionCoordinator(serverURI, profilesURIs, postsUri);
 	}
 	
 	@Override
