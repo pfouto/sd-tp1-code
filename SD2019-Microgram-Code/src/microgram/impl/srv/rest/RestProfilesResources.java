@@ -7,7 +7,6 @@ import java.util.Set;
 import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.rest.RestProfiles;
-import microgram.impl.srv.java.JavaProfiles;
 import microgram.impl.srv.java.ProfilesDistributionCoordinator;
 
 public class RestProfilesResources extends RestResource implements RestProfiles {

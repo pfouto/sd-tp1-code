@@ -10,7 +10,6 @@ import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.soap.MicrogramException;
 import microgram.api.soap.SoapProfiles;
-import microgram.impl.srv.java.JavaProfiles;
 import microgram.impl.srv.java.ProfilesDistributionCoordinator;
 
 @WebService(serviceName=SoapProfiles.NAME, targetNamespace=SoapProfiles.NAMESPACE, endpointInterface=SoapProfiles.INTERFACE)

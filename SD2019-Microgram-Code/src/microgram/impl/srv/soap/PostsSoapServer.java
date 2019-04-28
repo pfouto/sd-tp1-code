@@ -14,6 +14,7 @@ import microgram.impl.srv.rest.MediaRestServer;
 import utils.IP;
 
 
+@SuppressWarnings("restriction")
 public class PostsSoapServer {
 	private static Logger Log = Logger.getLogger(PostsSoapServer.class.getName());
 
