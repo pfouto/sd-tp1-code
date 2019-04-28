@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import static microgram.api.java.Result.ErrorCode.INTERNAL_ERROR;
 import static microgram.api.java.Result.ErrorCode.NOT_IMPLEMENTED;
 
 public class ProfilesDistributionCoordinator extends RestResource implements Profiles {
@@ -43,7 +44,13 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
 
     @Override
     public Result<Void> createProfile(Profile profile) {
-        return getInstanceByUserId(profile.getUserId()).createProfile(profile);
+        try {
+            System.out.println("Create profile: " + profile.getUserId());
+            return getInstanceByUserId(profile.getUserId()).createProfile(profile);
+        } catch (Exception e){
+            e.printStackTrace();
+            return Result.error(INTERNAL_ERROR);
+        }
     }
 
     @Override

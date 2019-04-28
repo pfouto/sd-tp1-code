@@ -46,7 +46,6 @@ public class JavaProfiles extends RestResource implements Profiles {
 
     @Override
     public Result<Void> createProfile(Profile profile) {
-
         try {
             if (users.putIfAbsent(profile.getUserId(), profile) != null) {
                 return Result.error(Result.ErrorCode.CONFLICT);
