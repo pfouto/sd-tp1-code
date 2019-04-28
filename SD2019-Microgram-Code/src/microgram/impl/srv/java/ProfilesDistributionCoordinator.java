@@ -7,6 +7,7 @@ import microgram.impl.clt.java.ClientFactory;
 import microgram.impl.srv.rest.RestResource;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
@@ -55,7 +56,17 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
 
     @Override
     public Result<List<Profile>> search(String prefix) {
-        return getInstanceByUserId(prefix).search(prefix);
+    	if(prefix.equalsIgnoreCase("")) {
+    		List<Profile> list = new ArrayList<Profile>();
+    		for(Profiles p: this.instances.values()) {
+    			Result<List<Profile>> partial = p.search(prefix);
+    			if(partial.isOK()) {
+    				list.addAll(partial.value());
+    			}
+    		}
+    		return Result.ok(list);
+    	} else
+    		return getInstanceByUserId(prefix).search(prefix);
     }
 
     @Override
