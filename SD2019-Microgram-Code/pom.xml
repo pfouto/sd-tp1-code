@@ -13,13 +13,6 @@
 		<dockerfile-maven-version>1.4.10</dockerfile-maven-version>
 	</properties>
 
-	<distributionManagement>
-		<repository>
-			<id>sd19</id>
-			<url>file://${googledrive}/mvn-repo</url>
-		</repository>
-	</distributionManagement>
-
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
