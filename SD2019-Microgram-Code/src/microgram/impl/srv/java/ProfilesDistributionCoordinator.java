@@ -33,6 +33,7 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
 
     private Profiles getInstanceByUserId(String userId){
     	int index = ((int) Character.toLowerCase(userId.charAt(0))) % serverURLs.length;
+    	System.err.println("Returning server instance " + index + " out of " + serverURLs.length);
     	return instances.get(serverURLs[index]);
     }
 
