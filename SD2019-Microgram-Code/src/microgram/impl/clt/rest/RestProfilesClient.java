@@ -37,7 +37,7 @@ public class RestProfilesClient extends RestClient implements Profiles {
                 .accept(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(profile, MediaType.APPLICATION_JSON));
 
-        return verifyResponse(r, Status.OK);
+        return verifyResponse(r, Status.NO_CONTENT);
     }
 
     @Override
@@ -60,21 +60,21 @@ public class RestProfilesClient extends RestClient implements Profiles {
     public Result<Void> follow(String userId1, String userId2, boolean isFollowing) {
         Response r = target.path(userId1).path("following").path(userId2).request()
                 .put(Entity.entity(isFollowing, MediaType.APPLICATION_JSON));
-        return verifyResponse(r, Status.OK);
+        return verifyResponse(r, Status.NO_CONTENT);
     }
 
     @Override
     public Result<Void> internalFollowFront(String userId1, String userId2, boolean isFollowing) {
         Response r = target.path(userId1).path("internalFollowFront").path(userId2).request()
                 .put(Entity.entity(isFollowing, MediaType.APPLICATION_JSON));
-        return verifyResponse(r, Status.OK);
+        return verifyResponse(r, Status.NO_CONTENT);
     }
 
     @Override
     public Result<Void> internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
         Response r = target.path(userId1).path("internalFollowReverse").path(userId2).request()
                 .put(Entity.entity(isFollowing, MediaType.APPLICATION_JSON));
-        return verifyResponse(r, Status.OK);
+        return verifyResponse(r, Status.NO_CONTENT);
     }
 
     @Override
@@ -99,10 +99,10 @@ public class RestProfilesClient extends RestClient implements Profiles {
 	}
 
 	@Override
-	public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
-		Response r = target.path(userId).path("posts")
-				.request().put(Entity.entity(increase, MediaType.APPLICATION_JSON));
-		
+	public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
+		Response r = target.path(userId).path("posts").path(replica)
+				.request().put(Entity.entity(number, MediaType.APPLICATION_JSON));
+
 		return verifyResponse(r, Status.NO_CONTENT);
 	}
 }

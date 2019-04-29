@@ -67,8 +67,9 @@ public interface Posts {
 	 * @return (OK, List<PostId>|empty list) or NOT_FOUND if the user profile is not known
 	 */
 	Result<List<String>> getPosts( String userId);
-	
-	
+
+	Result<List<String>> getPostsInternal( String userId);
+
 	/**
 	 * Returns the feed of the user profile. The feed is the list of Posts made by user profiles followed by the userId profile.
 	 * @param userId user profile of the requested feed

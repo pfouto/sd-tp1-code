@@ -56,6 +56,11 @@ static final String PATH="/posts";
 	@Path("/from/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	List<String> getPosts( @PathParam("userId") String userId);
+
+	@GET
+	@Path("/fromInternal/{userId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	List<String> getPostsInternal( @PathParam("userId") String userId);
 	
 	@GET
 	@Path("/feed/{userId}")

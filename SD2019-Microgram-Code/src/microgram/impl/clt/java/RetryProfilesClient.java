@@ -66,7 +66,7 @@ public class RetryProfilesClient extends RetryClient implements Profiles {
 	}
 
 	@Override
-	public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
-		return reTry(() -> impl.updateNumberOfPosts(userId, increase));
+	public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
+		return reTry(() -> impl.updateNumberOfPosts(userId, replica, number));
 	}
 }

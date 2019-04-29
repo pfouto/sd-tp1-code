@@ -18,19 +18,17 @@ public class Profile {
 	String fullName;
 	String photoUrl;
 	
-	AtomicInteger posts;
+	int posts;
 	int following;
 	int followers;
 
-	public Profile() {
-		this.posts = new AtomicInteger(0);
-	}
+	public Profile() { }
 
 	public Profile(String userId, String fullName, String photoUrl, int posts, int following, int followers) {
 		this.userId = userId;
 		this.fullName = fullName;
 		this.photoUrl = photoUrl;
-		this.posts = new AtomicInteger(posts);
+		this.posts = posts;
 		this.following = following;
 		this.followers = followers;
 	}
@@ -72,16 +70,11 @@ public class Profile {
 	}
 
 	public int getPosts() {
-		return posts.get();
+		return posts;
 	}
 
 	public void setPosts(int posts) {
-		this.posts = new AtomicInteger(posts);
-	}
-
-	public void incPosts(boolean inc) {
-		if (inc) posts.incrementAndGet();
-		else posts.decrementAndGet();
+		this.posts = posts;
 	}
 
 	public int getFollowing() {

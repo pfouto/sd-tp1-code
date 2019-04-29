@@ -32,7 +32,7 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 			Service service = Service.create(super.wsdl(), qname);
 			impl = service.getPort(SoapProfiles.class);
 			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.REQUEST_TIMEOUT, RetryClient.READ_TIMEOUT);
-			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, RetryClient.READ_TIMEOUT);
+			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, RetryClient.CONNECT_TIMEOUT);
 		}
 		return impl;
 	}
@@ -134,9 +134,9 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 	}
 
 	@Override
-	public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
+	public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
 		try {
-			impl().updateNumberOfPosts(userId, increase);
+			impl().updateNumberOfPosts(userId, replica, number);
 			return Result.ok();
 		} catch (MicrogramException e) {
 			return Result.error(errorCode(e));

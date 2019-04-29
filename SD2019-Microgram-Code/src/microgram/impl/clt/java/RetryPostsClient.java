@@ -45,6 +45,11 @@ public class RetryPostsClient extends RetryClient implements Posts {
 	}
 
 	@Override
+	public Result<List<String>> getPostsInternal(String userId) {
+		return reTry(() -> impl.getPostsInternal(userId));
+	}
+
+	@Override
 	public Result<List<String>> getFeed(String userId) {
 		return reTry(() -> impl.getFeed(userId));
 	}

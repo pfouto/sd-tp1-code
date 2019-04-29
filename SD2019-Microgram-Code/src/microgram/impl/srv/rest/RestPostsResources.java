@@ -7,15 +7,14 @@ import microgram.api.Post;
 import microgram.api.java.Posts;
 import microgram.api.rest.RestPosts;
 import microgram.impl.srv.java.JavaPosts;
+import microgram.impl.srv.java.PostsDistributionCoordinator;
 
 public class RestPostsResources extends RestResource implements RestPosts {
 
 	final Posts impl;
 		
-	public RestPostsResources(String serverURI, URI[] postsURIs, URI profilesUri, URI mediaUri) {
-		this.impl = 
-				
-				new JavaPosts(profilesUri, mediaUri);
+	public RestPostsResources(String myIp, String serverURI, URI[] postsURIs, URI profilesUri, URI mediaUri) {
+		this.impl = new PostsDistributionCoordinator(myIp, serverURI, postsURIs, profilesUri, mediaUri);
 	}
 	
 	@Override
@@ -46,6 +45,11 @@ public class RestPostsResources extends RestResource implements RestPosts {
 	@Override
 	public List<String> getPosts(String userId) {
 		return super.resultOrThrow(impl.getPosts(userId));
+	}
+
+	@Override
+	public List<String> getPostsInternal(String userId) {
+		return super.resultOrThrow(impl.getPostsInternal(userId));
 	}
 
 	@Override

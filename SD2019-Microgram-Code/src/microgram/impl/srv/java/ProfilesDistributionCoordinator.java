@@ -36,8 +36,7 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
 
     private Profiles getInstanceByUserId(String userId){
     	int index = ((int) Character.toLowerCase(userId.charAt(0))) % serverURLs.length;
-    	System.err.println("Returning server instance " + index + " out of " + serverURLs.length);
-    	System.err.println("Contacting server: " + serverURLs[index] + " :: " + instances.get(serverURLs[index]));
+    	//System.out.println("Returning instance " + index + "/" + serverURLs.length + " - " + serverURLs[index] + "::" + instances.get(serverURLs[index]) + " for id " + userId);
     	return instances.get(serverURLs[index]);
     }
 
@@ -49,10 +48,8 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
     @Override
     public Result<Void> createProfile(Profile profile) {
         try {
-            System.err.println("CreateProfile: " + profile.getUserId());
-            Result<Void> profile1 = getInstanceByUserId(profile.getUserId()).createProfile(profile);
-            if(!profile1.isOK()) System.err.println("CreateProfile error: " + profile.getUserId() + profile1);
-            return profile1;
+            Profiles instance = getInstanceByUserId(profile.getUserId());
+            return instance.createProfile(profile);
         } catch (Exception e){
             e.printStackTrace();
             return Result.error(INTERNAL_ERROR);
@@ -82,26 +79,47 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
     @Override
     public Result<Void> follow(String userId1, String userId2, boolean isFollowing) {
 
-        Result<Void> res1 = getInstanceByUserId(userId1).internalFollowFront(userId1, userId2, isFollowing);
-        Result<Void> res2 = getInstanceByUserId(userId2).internalFollowReverse(userId1, userId2, isFollowing);
+        //Check if both users exist before calling internal follow methods...
+        //Alternative would be to check existence of other user inside "internalFollowFront" and "internalFollowReverse"
+        Result<Profile> res1 = getInstanceByUserId(userId1).getProfile(userId1);
+        Result<Profile> res2 = getInstanceByUserId(userId2).getProfile(userId2);
 
-        if(res1.isOK() && res2.isOK())
-            return res1;
-        else if (!res1.isOK())
-            return res1;
+        if (!res1.isOK() || !res2.isOK()) {
+            if (!res1.isOK())
+                return Result.error(res1.error());
+            else
+                return Result.error(res2.error());
+        }
+
+
+        Result<Void> res3 = getInstanceByUserId(userId1).internalFollowFront(userId1, userId2, isFollowing);
+        Result<Void> res4 = getInstanceByUserId(userId2).internalFollowReverse(userId1, userId2, isFollowing);
+
+        if(res3.isOK() && res4.isOK())
+            return res3;
+        else if (!res3.isOK())
+            return res3;
         else
-            return res2;
-
+            return res4;
     }
 
     @Override
     public Result<Void> internalFollowFront(String userId1, String userId2, boolean isFollowing) {
-        return Result.error(NOT_IMPLEMENTED);
+        Profiles instance = getInstanceByUserId(userId1);
+        //Make sure internal call was forwarded to the correct replica...
+        if(!(instance instanceof JavaProfiles))
+            throw new AssertionError("internalFollowFront received in wrong replica");
+        return instance.internalFollowFront(userId1, userId2, isFollowing);
     }
 
     @Override
     public Result<Void> internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
-        return Result.error(NOT_IMPLEMENTED);
+        Profiles instance = getInstanceByUserId(userId2);
+        //Make sure internal call was forwarded to the correct replica...
+        if(!(instance instanceof JavaProfiles))
+            throw new AssertionError("internalFollowReverse received in wrong replica");
+        return instance.internalFollowReverse(userId1, userId2, isFollowing);
+
     }
 
     @Override
@@ -120,8 +138,8 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
     }
 
     @Override
-    public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
-        return getInstanceByUserId(userId).updateNumberOfPosts(userId, increase);
+    public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
+        return getInstanceByUserId(userId).updateNumberOfPosts(userId, replica, number);
     }
 
 }

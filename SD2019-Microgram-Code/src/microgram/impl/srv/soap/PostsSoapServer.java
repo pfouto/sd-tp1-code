@@ -63,7 +63,7 @@ public class PostsSoapServer {
 		while(mediaServers.length != 1)
 			mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
 
-		Endpoint soapEndpoint = Endpoint.create(new PostsWebService(myURL, postsServers, profileServers[0], mediaServers[0]));
+		Endpoint soapEndpoint = Endpoint.create(new PostsWebService(ip, myURL, postsServers, profileServers[0], mediaServers[0]));
 
 		server.setExecutor(Executors.newCachedThreadPool());
 		soapEndpoint.publish(server.createContext("/soap"));

@@ -16,8 +16,8 @@ public class PostsWebService extends SoapService implements SoapPosts {
 
 	final Posts impl;
 	
-	public PostsWebService(String myURL, URI[] postsUri, URI profilesUri, URI mediaUri) {
-		this.impl = new PostsDistributionCoordinator(myURL, postsUri, profilesUri, mediaUri);
+	public PostsWebService(String myIp, String myURL, URI[] postsUri, URI profilesUri, URI mediaUri) {
+		this.impl = new PostsDistributionCoordinator(myIp, myURL, postsUri, profilesUri, mediaUri);
 	}
 
 	@Override
@@ -48,6 +48,11 @@ public class PostsWebService extends SoapService implements SoapPosts {
 	@Override
 	public List<String> getPosts(String userId) throws MicrogramException {
 		return super.resultOrThrow( impl.getPosts(userId));
+	}
+
+	@Override
+	public List<String> getPostsInternal(String userId) throws MicrogramException {
+		return super.resultOrThrow(impl.getPostsInternal(userId));
 	}
 
 	@Override

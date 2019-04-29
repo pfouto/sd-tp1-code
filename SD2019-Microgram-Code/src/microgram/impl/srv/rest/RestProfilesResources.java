@@ -68,7 +68,7 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 	}
 
 	@Override
-	public void updateNumberOfPosts(String userId, boolean increase) {
-		super.resultOrThrow(impl.updateNumberOfPosts(userId, increase));
+	public void updateNumberOfPosts(String userId, String replica, int number) {
+		super.resultOrThrow(impl.updateNumberOfPosts(userId, replica, number));
 	}	
 }

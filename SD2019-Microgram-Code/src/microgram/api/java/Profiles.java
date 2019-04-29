@@ -36,10 +36,11 @@ public interface Profiles {
 	/**
 	 * Updates the number of posts of a user profile
 	 * @param userId is of profile to be manipulated
-	 * @param increase true to increment, false to decrement
+	 * @param replica is the replica that is updating the number
+	 * @param number is the new number of posts that replica holds
 	 * @return result of (OK,), or NOT_FOUND or CONFLICT
 	 */
-	Result<Void> updateNumberOfPosts( String userId, boolean increase);
+	Result<Void> updateNumberOfPosts( String userId, String replica, int number);
 
 	
 	/**

@@ -72,8 +72,8 @@ public class ProfilesWebService extends SoapService implements SoapProfiles {
 	}
 
 	@Override
-	public void updateNumberOfPosts(String userId, boolean increase) throws MicrogramException {
-		super.resultOrThrow( impl.updateNumberOfPosts(userId, increase) );
+	public void updateNumberOfPosts(String userId, String replica, int number) throws MicrogramException {
+		super.resultOrThrow( impl.updateNumberOfPosts(userId, replica, number) );
 	}
 	
 }

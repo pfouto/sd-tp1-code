@@ -31,7 +31,7 @@ public class SoapPostsClient extends SoapClient implements Posts {
 			Service service = Service.create(super.wsdl(), qname);
 			impl = service.getPort(SoapPosts.class);
 			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.REQUEST_TIMEOUT, RetryClient.READ_TIMEOUT);
-			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, RetryClient.READ_TIMEOUT);
+			((BindingProvider) impl).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, RetryClient.CONNECT_TIMEOUT);
 		}
 		return impl;
 	}
@@ -41,7 +41,7 @@ public class SoapPostsClient extends SoapClient implements Posts {
 		try {
 			return Result.ok(impl().getPost(postId));
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -51,7 +51,7 @@ public class SoapPostsClient extends SoapClient implements Posts {
 		try {
 			return Result.ok(impl().createPost(post));
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -61,7 +61,7 @@ public class SoapPostsClient extends SoapClient implements Posts {
 			impl().deletePost(postId);
 			return Result.ok();
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -71,7 +71,7 @@ public class SoapPostsClient extends SoapClient implements Posts {
 			impl().like(postId, userId, isLiked);
 			return Result.ok();
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -80,7 +80,7 @@ public class SoapPostsClient extends SoapClient implements Posts {
 		try {
 			return Result.ok(impl().isLiked(postId, userId));
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -89,7 +89,16 @@ public class SoapPostsClient extends SoapClient implements Posts {
 		try {
 			return Result.ok(impl().getPosts(userId));
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
+		}
+	}
+
+	@Override
+	public Result<List<String>> getPostsInternal(String userId) {
+		try {
+			return Result.ok(impl().getPostsInternal(userId));
+		} catch (MicrogramException e) {
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -98,7 +107,7 @@ public class SoapPostsClient extends SoapClient implements Posts {
 		try {
 			return Result.ok(impl().getFeed(userId));
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 
@@ -108,7 +117,7 @@ public class SoapPostsClient extends SoapClient implements Posts {
 			impl().purgeProfileActivity(userId);
 			return Result.ok();
 		} catch (MicrogramException e) {
-			return Result.error(super.errorCode(e));
+			return Result.error(errorCode(e));
 		}
 	}
 }

@@ -28,8 +28,8 @@ public interface SoapProfiles {
 	void deleteProfile( String userId ) throws MicrogramException;
 
 	@WebMethod
-	void updateNumberOfPosts( String userId, boolean increase) throws MicrogramException;
-	
+	void updateNumberOfPosts(String userId, String replica, int number) throws MicrogramException;
+
 	@WebMethod
 	List<Profile> search( String prefix ) throws MicrogramException;
 	

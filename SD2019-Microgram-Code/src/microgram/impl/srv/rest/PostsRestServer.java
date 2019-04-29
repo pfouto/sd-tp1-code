@@ -68,7 +68,7 @@ public class PostsRestServer {
 
 		ResourceConfig config = new ResourceConfig();
 
-		config.register(new RestPostsResources(serverURI, postServers, profileServers[0], mediaServers[0]));
+		config.register(new RestPostsResources(ip, serverURI, postServers, profileServers[0], mediaServers[0]));
 		config.register(new GenericExceptionMapper());
 		config.register(new PrematchingRequestFilter());
 

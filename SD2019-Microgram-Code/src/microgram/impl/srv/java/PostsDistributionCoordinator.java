@@ -16,16 +16,19 @@ public class PostsDistributionCoordinator implements Posts {
     private Profiles profilesClient;
     private SortedMap<String, Posts> instances;
     private String[] serverURLs;
+
+    private String myServerURI;
     
-    public PostsDistributionCoordinator(String myServerURI, URI[] postsURIs, URI profilesUri, URI mediaUri) {
+    public PostsDistributionCoordinator(String myIp, String myServerURI, URI[] postsURIs, URI profilesUri, URI mediaUri) {
+        this.myServerURI = myServerURI;
+
         profilesClient = ClientFactory.getProfilesClient(profilesUri);
         ClientFactory.getMediaClient(mediaUri);
-       
-        instances = new TreeMap<String, Posts>();
+        instances = new TreeMap<>();
         
         for(URI u: postsURIs) {
         	if ( u.toString().equalsIgnoreCase(myServerURI) ) {
-        		instances.put(u.toString(), new JavaPosts(profilesUri, mediaUri));
+        		instances.put(u.toString(), new JavaPosts(myIp, profilesUri, mediaUri));
         	} else {
         		instances.put(u.toString(), ClientFactory.getPostsClient(u));
         	}
@@ -35,7 +38,8 @@ public class PostsDistributionCoordinator implements Posts {
 
     private Posts getInstanceByPostId(String postId){
     	int index = ((int) Character.toLowerCase(postId.charAt(0))) % serverURLs.length;
-    	return instances.get(serverURLs[index]);
+        System.out.println("Returning instance " + index + "/" + serverURLs.length + " - " + serverURLs[index] + "::" + instances.get(serverURLs[index]) + " for id " + postId);
+        return instances.get(serverURLs[index]);
     }
     
     @Override
@@ -66,37 +70,42 @@ public class PostsDistributionCoordinator implements Posts {
 
     @Override
     public Result<List<String>> getPosts(String userId) {
+
        Result<Profile> profile = profilesClient.getProfile(userId);
-       if( profile.isOK()) {
-	       List<String> posts = new ArrayList<String> ();
-	       for(Posts p: this.instances.values()) {
-	    	   Result<List<String>> r = p.getPosts(userId);
-	    	   if(r.isOK()) {
-	    		   posts.addAll(r.value());
-	    	   }
-	       }
-	       return Result.ok(posts);
-       } else {
-    	   return Result.error(profile.error());
-       }
+        if (!profile.isOK())
+            return Result.error(profile.error());
+
+        List<String> posts = new ArrayList<>();
+        for(Posts p: this.instances.values()) {
+            Result<List<String>> r = p.getPostsInternal(userId);
+            if(r.isOK())
+                posts.addAll(r.value());
+        }
+        return Result.ok(posts);
+    }
+
+    @Override
+    public Result<List<String>> getPostsInternal(String userId) {
+        Posts posts = instances.get(myServerURI);
+        if(!(posts instanceof JavaPosts))
+            throw new AssertionError("getPostsInternal trying to access remote replica...");
+        return posts.getPostsInternal(userId);
     }
 
     @Override
     public Result<List<String>> getFeed(String userId) {
 
         Result<Set<String>> followees = profilesClient.getFollowees(userId);
-
-        if (followees.isOK()) {
-            List<String> feed = new ArrayList<>();
-            for (String user : followees.value()) {
-            	Result<List<String>> posts = this.getPosts(user);
-            	if(posts.isOK())
-                    feed.addAll(posts.value());
-            }
-            return Result.ok(feed);
-        } else {
+        if (!followees.isOK())
             return Result.error(followees.error());
+
+        List<String> feed = new ArrayList<>();
+        for (String user : followees.value()) {
+            Result<List<String>> posts = this.getPosts(user);
+            if(posts.isOK())
+                feed.addAll(posts.value());
         }
+        return Result.ok(feed);
     }
 
     @Override

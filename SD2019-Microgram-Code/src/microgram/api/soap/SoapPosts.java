@@ -34,6 +34,9 @@ public interface SoapPosts {
 		
 	@WebMethod
 	List<String> getPosts( String userId) throws MicrogramException;
+
+	@WebMethod
+	List<String> getPostsInternal( String userId) throws MicrogramException;
 	
 	@WebMethod
 	List<String> getFeed( String userId) throws MicrogramException;

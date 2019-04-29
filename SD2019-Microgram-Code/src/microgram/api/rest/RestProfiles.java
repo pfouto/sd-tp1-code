@@ -46,10 +46,10 @@ public interface RestProfiles {
 	void updateProfile( Profile profile);
 	
 	@PUT
-	@Path("/{userId}/posts")
+	@Path("/{userId}/posts/{replica}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	void updateNumberOfPosts( @PathParam("userId") String userId, boolean increase);
-	
+	void updateNumberOfPosts( @PathParam("userId") String userId, @PathParam("replica") String replica, int number);
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	List<Profile> search( @QueryParam("query") String name );
@@ -62,12 +62,12 @@ public interface RestProfiles {
 	@PUT
 	@Path("/{userId1}/internalFollowFront/{userId2}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	void internalFollowFront( @PathParam("userId1") String userId1, @PathParam("userId1") String userId2, boolean isFollowing);
+	void internalFollowFront( @PathParam("userId1") String userId1, @PathParam("userId2") String userId2, boolean isFollowing);
 
 	@PUT
 	@Path("/{userId1}/internalFollowReverse/{userId2}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	void internalFollowReverse( @PathParam("userId1") String userId1,@PathParam("userId1") String userId2, boolean isFollowing);
+	void internalFollowReverse( @PathParam("userId1") String userId1,@PathParam("userId2") String userId2, boolean isFollowing);
 	
 	@GET
 	@Path("/{userId1}/following/{userId2}")

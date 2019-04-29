@@ -6,7 +6,6 @@ import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.impl.srv.rest.RestResource;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +18,10 @@ import static microgram.api.java.Result.ErrorCode.NOT_IMPLEMENTED;
 public class JavaProfiles extends RestResource implements Profiles {
 
     private Map<String, Profile> users = new ConcurrentHashMap<>();
+
+    private Map<String, Map<String,Integer>> userPostsNumber = new ConcurrentHashMap<>();
+
+
     private Map<String, Set<String>> followers = new ConcurrentHashMap<>();
     private Map<String, Set<String>> following = new ConcurrentHashMap<>();
 
@@ -39,6 +42,8 @@ public class JavaProfiles extends RestResource implements Profiles {
         res.setFollowers(followers.get(userId).size());
         res.setFollowing(following.get(userId).size());
 
+        res.setPosts(userPostsNumber.get(userId).values().stream().mapToInt(x -> x).sum());
+
         return Result.ok(res);
     }
 
@@ -52,11 +57,10 @@ public class JavaProfiles extends RestResource implements Profiles {
 
             followers.put(profile.getUserId(), ConcurrentHashMap.newKeySet());
             following.put(profile.getUserId(), ConcurrentHashMap.newKeySet());
+            userPostsNumber.put(profile.getUserId(), new ConcurrentHashMap<>());
 
-            System.err.println("Internal create: " + profile.getUserId());
             return Result.ok();
         } catch (Exception e) {
-            System.err.println("Internal create: " + profile.getUserId() + " error: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
@@ -93,6 +97,7 @@ public class JavaProfiles extends RestResource implements Profiles {
         return Result.error(NOT_IMPLEMENTED);
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public Result<Void> internalFollowFront(String userId1, String userId2, boolean isFollowing) {
         Set<String> s1 = following.get(userId1);
@@ -112,6 +117,7 @@ public class JavaProfiles extends RestResource implements Profiles {
         return Result.ok();
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public Result<Void> internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
         Set<String> s2 = followers.get(userId2);
@@ -160,18 +166,14 @@ public class JavaProfiles extends RestResource implements Profiles {
     }
 
     @Override
-    public Result<Void> updateNumberOfPosts(String userId, boolean increase) {
+    public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
         try {
             Profile p = users.get(userId);
-            if (p != null) {
-                if (increase || p.getPosts() > 0) {
-                    p.incPosts(increase);
-                    return Result.ok();
-                }
-                return Result.error(Result.ErrorCode.CONFLICT);
-            } else {
+            if (p == null)
                 return Result.error(Result.ErrorCode.NOT_FOUND);
-            }
+
+            userPostsNumber.get(userId).put(replica, number);
+            return Result.ok();
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error(INTERNAL_ERROR);

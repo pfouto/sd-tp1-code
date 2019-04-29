@@ -65,6 +65,13 @@ public class RestPostsClient extends RestClient implements Posts {
 	}
 
 	@Override
+	public Result<List<String>> getPostsInternal(String userId) {
+		Response r = target.path("fromInternal").path(userId).request().get();
+		return responseContents(r, Status.OK, new GenericType<List<String>>() {
+		});
+	}
+
+	@Override
 	public Result<List<String>> getFeed(String userId) {
 		Response r = target.path("feed").path(userId).request().get();
 		return responseContents(r, Status.OK, new GenericType<List<String>>() {
