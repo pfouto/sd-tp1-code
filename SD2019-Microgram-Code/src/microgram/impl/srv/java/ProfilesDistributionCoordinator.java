@@ -7,6 +7,7 @@ import microgram.impl.clt.java.ClientFactory;
 import microgram.impl.srv.rest.RestResource;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
@@ -30,11 +31,13 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
         	}
         }
         serverURLs = instances.keySet().toArray(new String[instances.keySet().size()]);
+        System.err.println("Map: " + instances);
     }
 
     private Profiles getInstanceByUserId(String userId){
     	int index = ((int) Character.toLowerCase(userId.charAt(0))) % serverURLs.length;
     	System.err.println("Returning server instance " + index + " out of " + serverURLs.length);
+    	System.err.println("Contacting server: " + serverURLs[index] + " :: " + instances.get(serverURLs[index]));
     	return instances.get(serverURLs[index]);
     }
 
@@ -46,13 +49,12 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
     @Override
     public Result<Void> createProfile(Profile profile) {
         try {
-            System.err.println("Create profile: " + profile.getUserId());
+            System.err.println("CreateProfile: " + profile.getUserId());
             Result<Void> profile1 = getInstanceByUserId(profile.getUserId()).createProfile(profile);
-            System.err.println("Create profile: " + profile.getUserId() + " result: " + profile1.error());
+            if(!profile1.isOK()) System.err.println("CreateProfile error: " + profile.getUserId() + profile1);
             return profile1;
         } catch (Exception e){
             e.printStackTrace();
-            System.out.println("Create profile err: " + profile.getUserId() + " result: " + e.getMessage());
             return Result.error(INTERNAL_ERROR);
         }
     }
@@ -64,7 +66,17 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
 
     @Override
     public Result<List<Profile>> search(String prefix) {
-        return getInstanceByUserId(prefix).search(prefix);
+    	if(prefix.equalsIgnoreCase("")) {
+    		List<Profile> list = new ArrayList<Profile>();
+    		for(Profiles p: this.instances.values()) {
+    			Result<List<Profile>> partial = p.search(prefix);
+    			if(partial.isOK()) {
+    				list.addAll(partial.value());
+    			}
+    		}
+    		return Result.ok(list);
+    	} else
+    		return getInstanceByUserId(prefix).search(prefix);
     }
 
     @Override

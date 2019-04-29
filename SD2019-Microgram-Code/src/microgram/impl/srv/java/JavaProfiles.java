@@ -44,13 +44,15 @@ public class JavaProfiles extends RestResource implements Profiles {
 
     @Override
     public Result<Void> createProfile(Profile profile) {
+
         try {
             if (users.putIfAbsent(profile.getUserId(), profile) != null) {
                 return Result.error(Result.ErrorCode.CONFLICT);
             }
 
-            followers.put(profile.getUserId(), new HashSet<>());
-            following.put(profile.getUserId(), new HashSet<>());
+            followers.put(profile.getUserId(), ConcurrentHashMap.newKeySet());
+            following.put(profile.getUserId(), ConcurrentHashMap.newKeySet());
+
             System.err.println("Internal create: " + profile.getUserId());
             return Result.ok();
         } catch (Exception e) {
