@@ -28,12 +28,11 @@ public class RestResource {
 				return Status.NOT_FOUND;
 			case CONFLICT:
 				return Status.CONFLICT;
-			case INTERNAL_ERROR:
-				return Status.INTERNAL_SERVER_ERROR;
 			case OK:
 				return result.value() == null ? Status.NO_CONTENT: Status.OK;
 			case NOT_IMPLEMENTED:
 				return Status.NOT_IMPLEMENTED;
+			case INTERNAL_ERROR:
 			default:
 				return Status.INTERNAL_SERVER_ERROR;
 		}

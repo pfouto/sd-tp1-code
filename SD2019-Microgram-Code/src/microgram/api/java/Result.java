@@ -21,9 +21,9 @@ public interface Result<T> {
 	 * NOT_FOUND - an access occurred to something that does not exist
 	 * INTERNAL_ERROR - something unexpected happened
 	 */
-	enum ErrorCode{ OK, CONFLICT, NOT_FOUND, INTERNAL_ERROR, NOT_IMPLEMENTED };
-	
-	/**
+	enum ErrorCode{ OK, CONFLICT, NOT_FOUND, INTERNAL_ERROR, NOT_IMPLEMENTED }
+
+    /**
 	 * Tests if the result is an error.
 	 */
 	boolean isOK();

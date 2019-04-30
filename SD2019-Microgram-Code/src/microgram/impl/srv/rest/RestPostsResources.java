@@ -6,7 +6,6 @@ import java.util.List;
 import microgram.api.Post;
 import microgram.api.java.Posts;
 import microgram.api.rest.RestPosts;
-import microgram.impl.srv.java.JavaPosts;
 import microgram.impl.srv.java.PostsDistributionCoordinator;
 
 public class RestPostsResources extends RestResource implements RestPosts {

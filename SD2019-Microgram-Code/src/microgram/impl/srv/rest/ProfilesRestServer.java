@@ -25,7 +25,7 @@ public class ProfilesRestServer {
 	public static final String SERVICE = "Microgram-Profiles";
 	public static String SERVER_BASE_URI = "http://%s:%s/rest";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 
 		Log.setLevel( Level.FINER );
 

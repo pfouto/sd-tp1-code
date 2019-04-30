@@ -91,7 +91,7 @@ public class Discovery {
 				ms.receive(packet);
 				String announcement = new String(packet.getData(), 0, packet.getLength());
 				System.out.println("Received: " + announcement);
-				String s[] = announcement.split("\t");
+                String[] s = announcement.split("\t");
 				URI uri = URI.create(s[1]);
 				if(serviceName.equalsIgnoreCase(s[0]) && !uris.contains(uri)) {
 					System.out.println("Discovered: " + uri);
@@ -100,12 +100,11 @@ public class Discovery {
 					expirationtime = System.currentTimeMillis() + DISCOVERY_TIMEOUT;
 				}		
 			}
-		} catch (SocketTimeoutException e) {
-			;
-		} catch (Exception se) {
+		} catch (SocketTimeoutException ignored) {
+        } catch (Exception se) {
 			se.printStackTrace();
 		}
 
-		return uris.toArray(new URI[uris.size()]);
+		return uris.toArray(new URI[0]);
 	}	
 }

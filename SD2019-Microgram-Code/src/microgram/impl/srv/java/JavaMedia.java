@@ -16,6 +16,7 @@ public class JavaMedia implements Media {
 
     public JavaMedia(String baseUri) {
         this.baseUri = baseUri;
+        //noinspection ResultOfMethodCallIgnored
         new File(ROOT_DIR).mkdirs();
     }
 

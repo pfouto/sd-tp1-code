@@ -5,6 +5,7 @@ import microgram.api.java.Posts;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.impl.srv.rest.RestResource;
+import utils.ClockedValue;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class JavaProfiles extends RestResource implements Profiles {
 
     private Map<String, Profile> users = new ConcurrentHashMap<>();
 
-    private Map<String, Map<String,Integer>> userPostsNumber = new ConcurrentHashMap<>();
+    private Map<String, Map<String, ClockedValue>> userPostsNumber = new ConcurrentHashMap<>();
 
 
     private Map<String, Set<String>> followers = new ConcurrentHashMap<>();
@@ -42,8 +43,10 @@ public class JavaProfiles extends RestResource implements Profiles {
         res.setFollowers(followers.get(userId).size());
         res.setFollowing(following.get(userId).size());
 
-        res.setPosts(userPostsNumber.get(userId).values().stream().mapToInt(x -> x).sum());
+        int sum = userPostsNumber.get(userId).values().stream().mapToInt(ClockedValue::getValue).sum();
+        res.setPosts(sum);
 
+        System.err.println("Get profile: " + userId + " - " + res.getPosts() + " " + sum);
         return Result.ok(res);
     }
 
@@ -166,13 +169,16 @@ public class JavaProfiles extends RestResource implements Profiles {
     }
 
     @Override
-    public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
+    public Result<Void> updateNumberOfPosts(String userId, String replica, ClockedValue clockedValue) {
         try {
             Profile p = users.get(userId);
             if (p == null)
                 return Result.error(Result.ErrorCode.NOT_FOUND);
 
-            userPostsNumber.get(userId).put(replica, number);
+            System.err.println("Updating number of posts: " + userId + " - " + replica + " - " + clockedValue);
+            ClockedValue merge = userPostsNumber.get(userId).merge(replica, clockedValue, (e1, e2) -> e1.getClock() > e2.getClock() ? e1 : e2);
+            System.err.println("Updated " + userId + " - " + replica + " - " + merge);
+
             return Result.ok();
         } catch (Exception e) {
             e.printStackTrace();

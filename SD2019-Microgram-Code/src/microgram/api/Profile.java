@@ -1,7 +1,5 @@
 package microgram.api;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Represents a user Profile
  * 

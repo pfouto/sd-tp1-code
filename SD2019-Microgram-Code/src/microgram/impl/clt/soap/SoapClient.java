@@ -23,8 +23,7 @@ abstract class SoapClient {
 	
 	protected URL wsdl() {
 		try {
-			URL url = new URL(uri.toString() + WSDL);
-			return url;
+			return new URL(uri.toString() + WSDL);
 		} catch (Exception x) {
 			throw new RuntimeException(x.getMessage());
 		}
@@ -36,8 +35,8 @@ abstract class SoapClient {
 			case "OK": return ErrorCode.OK;
 			case "CONFLICT" : return ErrorCode.CONFLICT;
 			case "NOT_FOUND": return ErrorCode.NOT_FOUND;
-			case "INTERNAL_ERROR": return ErrorCode.INTERNAL_ERROR;
 			case "NOT_IMPLEMENTED": return ErrorCode.NOT_IMPLEMENTED;
+			case "INTERNAL_ERROR":
 			default:
 			return ErrorCode.INTERNAL_ERROR;
 		}

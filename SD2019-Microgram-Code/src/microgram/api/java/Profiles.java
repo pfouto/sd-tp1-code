@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import microgram.api.Profile;
+import utils.ClockedValue;
 
 /**
  * 
@@ -37,10 +38,10 @@ public interface Profiles {
 	 * Updates the number of posts of a user profile
 	 * @param userId is of profile to be manipulated
 	 * @param replica is the replica that is updating the number
-	 * @param number is the new number of posts that replica holds
+	 * @param clockedValue is the new number of posts that replica holds, and its clock (to fix unordered deliveries)
 	 * @return result of (OK,), or NOT_FOUND or CONFLICT
 	 */
-	Result<Void> updateNumberOfPosts( String userId, String replica, int number);
+	Result<Void> updateNumberOfPosts(String userId, String replica, ClockedValue clockedValue);
 
 	
 	/**

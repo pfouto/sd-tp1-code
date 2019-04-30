@@ -4,6 +4,7 @@ import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.api.rest.RestProfiles;
+import utils.ClockedValue;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
@@ -99,9 +100,9 @@ public class RestProfilesClient extends RestClient implements Profiles {
 	}
 
 	@Override
-	public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
+	public Result<Void> updateNumberOfPosts(String userId, String replica, ClockedValue clockedValue) {
 		Response r = target.path(userId).path("posts").path(replica)
-				.request().put(Entity.entity(number, MediaType.APPLICATION_JSON));
+				.request().put(Entity.entity(clockedValue, MediaType.APPLICATION_JSON));
 
 		return verifyResponse(r, Status.NO_CONTENT);
 	}

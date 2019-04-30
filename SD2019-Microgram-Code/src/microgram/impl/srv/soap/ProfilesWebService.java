@@ -11,6 +11,7 @@ import microgram.api.java.Profiles;
 import microgram.api.soap.MicrogramException;
 import microgram.api.soap.SoapProfiles;
 import microgram.impl.srv.java.ProfilesDistributionCoordinator;
+import utils.ClockedValue;
 
 @WebService(serviceName=SoapProfiles.NAME, targetNamespace=SoapProfiles.NAMESPACE, endpointInterface=SoapProfiles.INTERFACE)
 public class ProfilesWebService extends SoapService implements SoapProfiles {
@@ -72,8 +73,8 @@ public class ProfilesWebService extends SoapService implements SoapProfiles {
 	}
 
 	@Override
-	public void updateNumberOfPosts(String userId, String replica, int number) throws MicrogramException {
-		super.resultOrThrow( impl.updateNumberOfPosts(userId, replica, number) );
+	public void updateNumberOfPosts(String userId, String replica, ClockedValue clockedValue) throws MicrogramException {
+		super.resultOrThrow( impl.updateNumberOfPosts(userId, replica, clockedValue) );
 	}
 	
 }

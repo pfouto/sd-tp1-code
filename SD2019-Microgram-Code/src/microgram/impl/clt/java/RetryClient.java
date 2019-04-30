@@ -17,7 +17,8 @@ public abstract class RetryClient {
             try {
                 return func.get();
             } catch (Exception x) {
-                x.printStackTrace();
+                System.err.println("RetryException: " + x.getMessage());
+                //x.printStackTrace();
                 Sleep.ms(RETRY_SLEEP);
             }
         System.err.println("Max retries reached..." + func.toString());

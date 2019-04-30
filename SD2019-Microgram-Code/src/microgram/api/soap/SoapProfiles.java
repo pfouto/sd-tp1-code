@@ -1,19 +1,19 @@
 package microgram.api.soap;
 
-import java.util.List;
-import java.util.Set;
+import microgram.api.Profile;
+import utils.ClockedValue;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
-
-import microgram.api.Profile;
+import java.util.List;
+import java.util.Set;
 
 @WebService(serviceName=SoapProfiles.NAME, targetNamespace=SoapProfiles.NAMESPACE, endpointInterface=SoapProfiles.INTERFACE)
 public interface SoapProfiles {
 	
-	static final String NAME = "profiles";
-	static final String NAMESPACE = "http://sd2019";
-	static final String INTERFACE = "microgram.api.soap.SoapProfiles";
+	String NAME = "profiles";
+	String NAMESPACE = "http://sd2019";
+	String INTERFACE = "microgram.api.soap.SoapProfiles";
 	
 	@WebMethod
 	Profile getProfile( String userId ) throws MicrogramException;
@@ -28,7 +28,7 @@ public interface SoapProfiles {
 	void deleteProfile( String userId ) throws MicrogramException;
 
 	@WebMethod
-	void updateNumberOfPosts(String userId, String replica, int number) throws MicrogramException;
+	void updateNumberOfPosts(String userId, String replica, ClockedValue clockedValue) throws MicrogramException;
 
 	@WebMethod
 	List<Profile> search( String prefix ) throws MicrogramException;

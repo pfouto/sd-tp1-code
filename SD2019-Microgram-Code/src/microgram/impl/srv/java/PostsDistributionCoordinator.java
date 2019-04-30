@@ -33,12 +33,11 @@ public class PostsDistributionCoordinator implements Posts {
         		instances.put(u.toString(), ClientFactory.getPostsClient(u));
         	}
         }
-        serverURLs = instances.keySet().toArray(new String[instances.keySet().size()]);
+        serverURLs = instances.keySet().toArray(new String[0]);
     }
 
     private Posts getInstanceByPostId(String postId){
     	int index = ((int) Character.toLowerCase(postId.charAt(0))) % serverURLs.length;
-        System.out.println("Returning instance " + index + "/" + serverURLs.length + " - " + serverURLs[index] + "::" + instances.get(serverURLs[index]) + " for id " + postId);
         return instances.get(serverURLs[index]);
     }
     

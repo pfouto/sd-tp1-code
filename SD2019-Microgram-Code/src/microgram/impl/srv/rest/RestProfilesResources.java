@@ -8,6 +8,7 @@ import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.rest.RestProfiles;
 import microgram.impl.srv.java.ProfilesDistributionCoordinator;
+import utils.ClockedValue;
 
 public class RestProfilesResources extends RestResource implements RestProfiles {
 
@@ -68,7 +69,7 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 	}
 
 	@Override
-	public void updateNumberOfPosts(String userId, String replica, int number) {
-		super.resultOrThrow(impl.updateNumberOfPosts(userId, replica, number));
+	public void updateNumberOfPosts(String userId, String replica, ClockedValue clockedValue) {
+		super.resultOrThrow(impl.updateNumberOfPosts(userId, replica, clockedValue));
 	}	
 }

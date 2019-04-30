@@ -23,7 +23,7 @@ import microgram.api.Post;
 @Path( RestPosts.PATH )
 public interface RestPosts {
 
-static final String PATH="/posts";
+String PATH="/posts";
 	
 	@GET
 	@Path("/{postId}")

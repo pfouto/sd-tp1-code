@@ -6,6 +6,7 @@ import microgram.api.java.Posts;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.impl.clt.java.ClientFactory;
+import utils.ClockedValue;
 import utils.Hash;
 
 import java.net.URI;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class JavaPosts implements Posts {
 
@@ -26,10 +28,13 @@ public class JavaPosts implements Posts {
 
     private String myIp;
 
+    private AtomicInteger clock;
+
     JavaPosts(String myIp, URI profilesUri, URI mediaUri) {
         this.myIp = myIp;
         profilesClient = ClientFactory.getProfilesClient(profilesUri);
         mediaClient = ClientFactory.getMediaClient(mediaUri);
+        clock = new AtomicInteger(0);
     }
 
     @Override
@@ -50,9 +55,7 @@ public class JavaPosts implements Posts {
 
             Set<String> singleUserPosts = userPosts.get(p.getOwnerId());
             singleUserPosts.remove(postId);
-            synchronized (singleUserPosts) {
-                profilesClient.updateNumberOfPosts(p.getOwnerId(), myIp, singleUserPosts.size());
-            }
+            profilesClient.updateNumberOfPosts(p.getOwnerId(), myIp, new ClockedValue(clock.incrementAndGet(), singleUserPosts.size()));
 
             return Result.ok();
         } catch (Exception e) {
@@ -63,17 +66,14 @@ public class JavaPosts implements Posts {
     }
 
     @Override
-    public Result<String> createPost(Post post) {
-        String postId = Hash.of(post.getOwnerId(), post.getMediaUrl());
-        if (posts.putIfAbsent(postId, post) == null) {
+    public Result<String> createPost(Post p) {
+        String postId = Hash.of(p.getOwnerId(), p.getMediaUrl());
+        if (posts.putIfAbsent(postId, p) == null) {
             likes.put(postId, ConcurrentHashMap.newKeySet());
 
-            Set<String> singleUserPosts = userPosts.computeIfAbsent(post.getOwnerId(), k -> ConcurrentHashMap.newKeySet());
+            Set<String> singleUserPosts = userPosts.computeIfAbsent(p.getOwnerId(), k -> ConcurrentHashMap.newKeySet());
             singleUserPosts.add(postId);
-            synchronized (singleUserPosts) {
-                profilesClient.updateNumberOfPosts(post.getOwnerId(), myIp, singleUserPosts.size());
-            }
-
+            profilesClient.updateNumberOfPosts(p.getOwnerId(), myIp, new ClockedValue(clock.incrementAndGet(), singleUserPosts.size()));
         }
         return Result.ok(postId);
     }

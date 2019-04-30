@@ -16,6 +16,7 @@ import microgram.api.java.Result;
 import microgram.api.soap.MicrogramException;
 import microgram.api.soap.SoapProfiles;
 import microgram.impl.clt.java.RetryClient;
+import utils.ClockedValue;
 
 public class SoapProfilesClient extends SoapClient implements Profiles {
 
@@ -134,9 +135,9 @@ public class SoapProfilesClient extends SoapClient implements Profiles {
 	}
 
 	@Override
-	public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
+	public Result<Void> updateNumberOfPosts(String userId, String replica, ClockedValue clockedValue) {
 		try {
-			impl().updateNumberOfPosts(userId, replica, number);
+			impl().updateNumberOfPosts(userId, replica, clockedValue);
 			return Result.ok();
 		} catch (MicrogramException e) {
 			return Result.error(errorCode(e));

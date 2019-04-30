@@ -15,6 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import microgram.api.Profile;
+import utils.ClockedValue;
 
 /**
  * REST API of the Profiles service.
@@ -26,7 +27,7 @@ import microgram.api.Profile;
 @Path(RestProfiles.PATH)
 public interface RestProfiles {
 
-	static final String PATH="/profiles";
+	String PATH="/profiles";
 	
 	@GET
 	@Path("/{userId}")
@@ -48,7 +49,7 @@ public interface RestProfiles {
 	@PUT
 	@Path("/{userId}/posts/{replica}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	void updateNumberOfPosts( @PathParam("userId") String userId, @PathParam("replica") String replica, int number);
+	void updateNumberOfPosts(@PathParam("userId") String userId, @PathParam("replica") String replica, ClockedValue clockedValue);
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

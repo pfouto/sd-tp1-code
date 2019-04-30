@@ -6,6 +6,7 @@ import java.util.Set;
 import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
+import utils.ClockedValue;
 
 public class RetryProfilesClient extends RetryClient implements Profiles {
 
@@ -66,7 +67,7 @@ public class RetryProfilesClient extends RetryClient implements Profiles {
 	}
 
 	@Override
-	public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
-		return reTry(() -> impl.updateNumberOfPosts(userId, replica, number));
+	public Result<Void> updateNumberOfPosts(String userId, String replica, ClockedValue clockedValue) {
+		return reTry(() -> impl.updateNumberOfPosts(userId, replica, clockedValue));
 	}
 }

@@ -5,16 +5,12 @@ import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.impl.clt.java.ClientFactory;
 import microgram.impl.srv.rest.RestResource;
+import utils.ClockedValue;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 import static microgram.api.java.Result.ErrorCode.INTERNAL_ERROR;
-import static microgram.api.java.Result.ErrorCode.NOT_IMPLEMENTED;
 
 public class ProfilesDistributionCoordinator extends RestResource implements Profiles {
 
@@ -30,13 +26,12 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
         		instances.put(u.toString(), ClientFactory.getProfilesClient(u));
         	}
         }
-        serverURLs = instances.keySet().toArray(new String[instances.keySet().size()]);
+        serverURLs = instances.keySet().toArray(new String[0]);
         System.err.println("Map: " + instances);
     }
 
     private Profiles getInstanceByUserId(String userId){
     	int index = ((int) Character.toLowerCase(userId.charAt(0))) % serverURLs.length;
-    	//System.out.println("Returning instance " + index + "/" + serverURLs.length + " - " + serverURLs[index] + "::" + instances.get(serverURLs[index]) + " for id " + userId);
     	return instances.get(serverURLs[index]);
     }
 
@@ -64,7 +59,7 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
     @Override
     public Result<List<Profile>> search(String prefix) {
     	if(prefix.equalsIgnoreCase("")) {
-    		List<Profile> list = new ArrayList<Profile>();
+    		List<Profile> list = new ArrayList<>();
     		for(Profiles p: this.instances.values()) {
     			Result<List<Profile>> partial = p.search(prefix);
     			if(partial.isOK()) {
@@ -138,8 +133,8 @@ public class ProfilesDistributionCoordinator extends RestResource implements Pro
     }
 
     @Override
-    public Result<Void> updateNumberOfPosts(String userId, String replica, int number) {
-        return getInstanceByUserId(userId).updateNumberOfPosts(userId, replica, number);
+    public Result<Void> updateNumberOfPosts(String userId, String replica, ClockedValue clockedValue) {
+        return getInstanceByUserId(userId).updateNumberOfPosts(userId, replica, clockedValue);
     }
 
 }
