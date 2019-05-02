@@ -43,10 +43,7 @@ public class JavaProfiles extends RestResource implements Profiles {
         res.setFollowers(followers.get(userId).size());
         res.setFollowing(following.get(userId).size());
 
-        int sum = userPostsNumber.get(userId).values().stream().mapToInt(ClockedValue::getValue).sum();
-        res.setPosts(sum);
-
-        System.err.println("Get profile: " + userId + " - " + res.getPosts() + " " + sum);
+        System.err.println("Get profile: " + userId + " - " + res.getPosts());
         return Result.ok(res);
     }
 
@@ -117,6 +114,8 @@ public class JavaProfiles extends RestResource implements Profiles {
             if (!removed1)
                 return Result.error(Result.ErrorCode.NOT_FOUND);
         }
+        users.get(userId1).setFollowing(s1.size());
+
         return Result.ok();
     }
 
@@ -137,6 +136,9 @@ public class JavaProfiles extends RestResource implements Profiles {
             if (!removed2)
                 return Result.error(Result.ErrorCode.NOT_FOUND);
         }
+        
+        users.get(userId2).setFollowers(s2.size());
+
         return Result.ok();
     }
 
@@ -179,6 +181,9 @@ public class JavaProfiles extends RestResource implements Profiles {
             ClockedValue merge = userPostsNumber.get(userId).merge(replica, clockedValue, (e1, e2) -> e1.getClock() > e2.getClock() ? e1 : e2);
             System.err.println("Updated " + userId + " - " + replica + " - " + merge);
 
+            int sum = userPostsNumber.get(userId).values().stream().mapToInt(ClockedValue::getValue).sum();
+            p.setPosts(sum);
+            
             return Result.ok();
         } catch (Exception e) {
             e.printStackTrace();
