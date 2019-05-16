@@ -60,21 +60,13 @@ public interface RestProfiles {
 	@Consumes(MediaType.APPLICATION_JSON)
 	void follow( @PathParam("userId1") String userId1, @PathParam("userId2") String userId2, boolean isFollowing);
 
-	@PUT
-	@Path("/{userId1}/internalFollowFront/{userId2}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	void internalFollowFront( @PathParam("userId1") String userId1, @PathParam("userId2") String userId2, boolean isFollowing);
-
-	@PUT
-	@Path("/{userId1}/internalFollowReverse/{userId2}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	void internalFollowReverse( @PathParam("userId1") String userId1,@PathParam("userId2") String userId2, boolean isFollowing);
-	
 	@GET
 	@Path("/{userId1}/following/{userId2}")
+	@Produces(MediaType.APPLICATION_JSON)
 	boolean isFollowing( @PathParam("userId1") String userId1, @PathParam("userId2") String userId2);
 
 	@GET
 	@Path("/{userId}/followees")
+	@Produces(MediaType.APPLICATION_JSON)
 	Set<String> getFollowees( @PathParam("userId") String userId );
 }

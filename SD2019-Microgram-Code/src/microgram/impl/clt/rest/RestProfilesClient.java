@@ -65,20 +65,6 @@ public class RestProfilesClient extends RestClient implements Profiles {
     }
 
     @Override
-    public Result<Void> internalFollowFront(String userId1, String userId2, boolean isFollowing) {
-        Response r = target.path(userId1).path("internalFollowFront").path(userId2).request()
-                .put(Entity.entity(isFollowing, MediaType.APPLICATION_JSON));
-        return verifyResponse(r, Status.NO_CONTENT);
-    }
-
-    @Override
-    public Result<Void> internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
-        Response r = target.path(userId1).path("internalFollowReverse").path(userId2).request()
-                .put(Entity.entity(isFollowing, MediaType.APPLICATION_JSON));
-        return verifyResponse(r, Status.NO_CONTENT);
-    }
-
-    @Override
     public Result<Boolean> isFollowing(String userId1, String userId2) {
         Response r = target.path(userId1).path("following").path(userId2).request().get();
         return responseContents(r, Status.OK, new GenericType<Boolean>() {

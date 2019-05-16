@@ -31,6 +31,21 @@ public class Profile {
 		this.followers = followers;
 	}
 
+	public Profile(String userId, String fullName, String photoUrl) {
+		this.userId = userId;
+		this.fullName = fullName;
+		this.photoUrl = photoUrl;
+		this.posts = 0;
+		this.following = 0;
+		this.followers = 0;
+	}
+
+	public void setCounters(int posts, int following, int followers){
+		this.posts = posts;
+		this.following = following;
+		this.followers = followers;
+	}
+
 	@Override
 	public String toString() {
 		return "Profile{" +

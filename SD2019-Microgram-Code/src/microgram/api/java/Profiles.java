@@ -68,10 +68,6 @@ public interface Profiles {
 	 */
 	Result<Void> follow( String userId1, String userId2, boolean isFollowing);
 
-	//Internal methods since follow logic is now split between two instances of the service.
-	Result<Void> internalFollowFront( String userId1, String userId2, boolean isFollowing);
-	Result<Void> internalFollowReverse( String userId1, String userId2, boolean isFollowing);
-	
 	/**
 	 * Checks if a profile is following another or not
 	 * 

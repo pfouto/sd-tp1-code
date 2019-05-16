@@ -7,7 +7,7 @@ import java.util.Set;
 import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.rest.RestProfiles;
-import microgram.impl.srv.java.ProfilesDistributionCoordinator;
+import microgram.impl.srv.java.JavaProfiles;
 import utils.ClockedValue;
 
 public class RestProfilesResources extends RestResource implements RestProfiles {
@@ -15,7 +15,7 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 	final Profiles impl;
 	
 	public RestProfilesResources(String serverURI, URI[] profilesURIs, URI postsUri) {
-		this.impl = new ProfilesDistributionCoordinator(serverURI, profilesURIs, postsUri);
+		this.impl = new JavaProfiles(postsUri);
 	}
 	
 	@Override
@@ -41,16 +41,6 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 	@Override
 	public void follow(String userId1, String userId2, boolean isFollowing) {
 		super.resultOrThrow(impl.follow(userId1, userId2, isFollowing));
-	}
-
-	@Override
-	public void internalFollowFront(String userId1, String userId2, boolean isFollowing) {
-		super.resultOrThrow(impl.internalFollowFront(userId1, userId2, isFollowing));
-	}
-
-	@Override
-	public void internalFollowReverse(String userId1, String userId2, boolean isFollowing) {
-		super.resultOrThrow(impl.internalFollowReverse(userId1, userId2, isFollowing));
 	}
 
 	@Override

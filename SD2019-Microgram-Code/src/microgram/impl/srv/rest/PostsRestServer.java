@@ -10,8 +10,6 @@ import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import discovery.Discovery;
-import microgram.impl.srv.soap.PostsSoapServer;
-import microgram.impl.srv.soap.ProfilesSoapServer;
 import utils.IP;
 
 
@@ -58,10 +56,10 @@ public class PostsRestServer {
 		
 		
 		while(postServers.length != posts) 
-			postServers = Discovery.findUrisOf(PostsSoapServer.SERVICE, posts);
+			postServers = Discovery.findUrisOf(PostsRestServer.SERVICE, posts);
 		
 		while(profileServers.length != 1)
-			profileServers = Discovery.findUrisOf(ProfilesSoapServer.SERVICE, 1);
+			profileServers = Discovery.findUrisOf(PostsRestServer.SERVICE, 1);
 		
 		while(mediaServers.length != 1)
 			mediaServers = Discovery.findUrisOf(MediaRestServer.SERVICE, 1);
